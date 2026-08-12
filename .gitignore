@@ -1,0 +1,25 @@
+#Rohdaten
+data/
+results/
+!results/.gitkeep
+
+# Datenbezogene Dateiformate
+*.wav
+*.mp3
+*.zip
+*.xlsx
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# alle andere Dateien
+.*
+!.gitignore
+!.github

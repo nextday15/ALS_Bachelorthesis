@@ -1,0 +1,76 @@
+Bachelorarbeitsthema:
+Klassifikation und Progressionsvorhersage des Dysarthrie-Schweregrads bei ALS auf Basis akustischer Sprach-Feature
+
+Ziele der Arbeit:
+- Extraktion geeigneter akustischer Sprach-Features für SAND Task 1 und SAND Task 2
+- SAND Task 1: Klassifikation des aktuellen Dysarthrie-Schweregrads
+- SAND Task 2: Vorhersage des späteren Dysarthrie-Schweregrads auf Basis der ersten Untersuchung, des Ausgangsschweregrads und des Zeitabstands
+- Vergleich von drei klassischen Machine-Learning-Modellen: Support Vector Machine, Random Forest und XGBoost zur Klassifikation und Progressionsvorhersage auf Basis akustischer Sprachmerkmale.
+- Untersuchung der Relevanz einzelner Feature-Gruppen und Sprachaufgaben
+- Optionale Prüfung ausgewählter Features auf dem VOICED Dataset
+
+Forschungsfragen:
+- Welche akustischen Sprach-Features eignen sich zur Klassifikation des aktuellen Dysarthrie-Schweregrads in SAND Task 1?
+- Welche akustischen Sprach-Features tragen zur Vorhersage des späteren Dysarthrie-Schweregrads in SAND Task 2 bei?
+- Welches der Modelle SVM, Random Forest und XGBoost erzielt die beste und stabilste Macro-F1-Leistung?
+- Welche Feature-Gruppen und Sprachaufgaben tragen am stärksten zur Klassifikation bei?
+- Lassen sich ausgewählte Features optional auf das VOICED Dataset übertragen?
+
+Umsetzung:
+1. Literaturrecherche:
+- Überblick über klinisch relevante akustische Sprachmerkmale: Grundfrequenz, Jitter, Shimmer, Harmonics-to-Noise Ratio, MFCC, Formanten, spektrale Merkmale und zeitlich-rhythmische Merkmale
+- Einarbeitung in die drei untersuchten Modelle: SVM, Random Forest und XGBoost
+- Analyse bestehender Arbeiten zur Dysarthrie-Klassifikation in SAND Task 1 und zur Progressionsvorhersage in SAND Task 2
+
+2. Datenaufbereitung:
+- Verwendung der fünf Vokalaufnahmen /a/, /e/, /i/, /o/, /u/ und der drei Silbenaufgaben /pa/, /ta/, /ka/
+- Für SAND Task 1: Verwendung des aktuellen Schweregradlabels einschließlich der gesunden Kontrollklasse
+- Für SAND Task 2: Verwendung des Ausgangsschweregrads, des späteren Zielschweregrads und des Zeitabstands zwischen den Untersuchungen
+- Qualitätskontrolle der Audiodateien und einheitliche Vorverarbeitung ohne Veränderung klinisch relevanter Eigenschaften
+- Aufteilung der Daten ausschließlich auf Personenebene
+- Optionale Auswahl der vergleichbaren Vokalaufnahme /a/ aus dem VOICED Dataset
+
+3. Feature Engineering:
+- Extraktion eines kompakten eGeMAPS-Feature-Sets als reproduzierbare Basis
+- Ergänzung um MFCC-Statistiken, Formantmerkmale und rhythmische Merkmale der /pa/, /ta/ und /ka/-Aufnahmen
+- Aggregation der Frame-Level-Merkmale durch Mittelwert, Standardabweichung und ausgewählte Quantile
+- Bildung getrennter Feature-Sets: Stimmqualität, spektrale Merkmale, Formanten und Rhythmus
+- Vergleich einzelner Sprachaufgaben sowie einer gemeinsamen Feature-Level-Fusion aller acht Aufnahmen
+- Vermeidung einer unnötig großen Zahl redundanter Features durch Korrelationsfilter oder modellinterne Regularisierung
+
+4. Training und Evaluation:
+-Vergleich der klassischen Machine-Learning-Modelle Support Vector Machine mit RBF-Kernel, Random Forest und XGBoost zur Abbildung nichtlinearer Zusammenhänge zwischen akustischen Sprachmerkmalen.
+- Verwendung von Klassengewichten bei allen Modellen, soweit unterstützt
+- Hyperparameteroptimierung
+- Getrenntes Training und getrennte Auswertung für SAND Task 1 und SAND Task 2
+- Macro-F1 als primäre Metrik entsprechend der SAND-Evaluation
+- Ergänzende Auswertung mit Balanced Accuracy, klassenspezifischem Recall und Confusion Matrix
+- Optionale Cross-Dataset-Evaluation auf VOICED ohne erneute Anpassung an den Testdaten
+
+5. Ergebnisse und Einordnung:
+- Vergleich der Modelle, Feature-Sets und Sprachaufgaben
+- Getrennte Analyse der Ergebnisse für SAND Task 1 und SAND Task 2
+- Analyse der Fehlklassifikationen zwischen benachbarten Schweregradklassen
+- Einordnung der Ergebnisse im Vergleich zu veröffentlichten SAND-Ergebnissen
+- Interpretation optionaler VOICED-Ergebnisse ausschließlich als Domain-Shift-Test
+
+6. Feature Importance:
+- Analyse der wichtigsten akustischen Merkmale mit Permutation Importance und SHAP
+- Vergleich der Merkmalsrelevanz zwischen Modellen, Feature-Sets und Sprachaufgaben
+- Einordnung der Ergebnisse hinsichtlich klinischer Plausibilität und Interpretierbarkeit
+
+7. Diskussion:
+- Bewertung der Eignung von SVM, Random Forest und XGBoost für den SAND-Datensatz
+- Diskussion des Verhältnisses zwischen Modellleistung und Interpretierbarkeit
+- Analyse zentraler Limitationen wie Klassenungleichgewicht, geringe Stichprobengröße und mögliche Einflussfaktoren durch Alter, Geschlecht oder Aufnahmebedingungen
+- Bewertung der Übertragbarkeit auf andere Erkrankungen und Datensätze
+- Abgrenzung der Ergebnisse von einer klinischen Diagnose
+
+Datensätze:
+SAND Dataset:
+Sannino, G. et al. (2026). SAND: The Challenge on Speech Analysis for Neurodegenerative Disease Assessment. arXiv preprint arXiv:2604.16445.
+https://www.sand.icar.cnr.it/
+
+Optional: VOICED Dataset
+Cesari, U. et al. (2018). A new database of healthy and pathological voices. Computers & Electrical Engineering, 68, 310-321.
+https://physionet.org/content/voiced/1.0.0/
