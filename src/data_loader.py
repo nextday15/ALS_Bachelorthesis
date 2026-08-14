@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+from sklearn.model_selection import GroupKFold
 
 DATA_ROOT = Path("data/raw")
 # Mapping of speech task shorthand keys to standard filename suffixes in SAND dataset
@@ -13,7 +14,7 @@ SPEECH_TASK_SUFFIXES = {
     "ta": "rhythmTA",
     "ka": "rhythmKA",
 }
-# Task-specific label and audio directory paths
+# Task specific label and audio directory paths
 TASK_PATHS = {
     1: {
         "train": {
@@ -49,9 +50,9 @@ SHEET_KEYWORDS = {
     "main": ("training set",),
 }
 
-# ==================================================
+# -----------------------------------------
 # Excel Parsing and Label Standardization
-# ==================================================
+# -----------------------------------------
 # classify a sheet by name
 def _classify_sheet(sheet_name: str) -> str:
     lowered = sheet_name.lower()
@@ -119,9 +120,9 @@ def load_task_labels(task: int, split: str = "train") -> pd.DataFrame:
 
     return df
 
-# ==================================================
+# -----------------------------------------
 # Audio File Inventory and Quality Control (QC)
-# ==================================================
+# -----------------------------------------
 def find_wav(audio_root: Path, speaker_id: str, suffix: str) -> Path:
     return audio_root / suffix / f"{speaker_id}_{suffix}.wav"
 
@@ -159,6 +160,19 @@ def load_and_check_task(task: int, split: str = "train") -> tuple[pd.DataFrame, 
     summarize_inventory(inventory, task, split)
     merged = labels_df.merge(inventory, on="ID", how="left")
     return merged, inventory
+
+# split on subject ID so the same speaker never appears in both train and val
+def person_level_group_kfold(df: pd.DataFrame, n_splits: int = 5, group_col: str = "ID"):
+    groups = df[group_col]
+    n_subjects = groups.nunique()
+    if n_splits > n_subjects:
+        raise ValueError(
+            f"n_splits={n_splits} larger than number of subjects ({n_subjects})"
+        )
+
+    gkf = GroupKFold(n_splits=n_splits)
+    for fold, (train_idx, val_idx) in enumerate(gkf.split(df, groups=groups)):
+        yield fold, df.iloc[train_idx].copy(), df.iloc[val_idx].copy()
 
 
 if __name__ == "__main__":
