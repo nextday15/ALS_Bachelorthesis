@@ -1,25 +1,41 @@
-#Rohdaten
+# data
 data/
 results/
 !results/.gitkeep
 
-# Datenbezogene Dateiformate
+outputs/processed_data/
+outputs/models/
+
+# data files
 *.wav
 *.mp3
 *.zip
 *.xlsx
 *.csv
+*.parquet
+*.pkl
+*.joblib
+*.pth
 
-# Python
+# python files
 __pycache__/
 *.py[cod]
+*$py.class
 *.egg-info/
 .pytest_cache/
 .venv/
 venv/
+ENV/
 .ipynb_checkpoints/
 
-# alle andere Dateien
+# system files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+.Rhistory
+
+# exceptions
 .*
 !.gitignore
 !.github
