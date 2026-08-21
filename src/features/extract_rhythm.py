@@ -140,7 +140,7 @@ def _ddk_metrics(intensity, duration):
 # -----------------------------------------
 # Praat: pitch, intensity, formants, (DDK metrics)
 # -----------------------------------------
-def extract_file(wav_path, task_key, sex=None):
+def extract_file(wav_path, task_key):
     feats = _nan_features()
     try:
         sound = parselmouth.Sound(str(wav_path))
@@ -221,7 +221,6 @@ def extract_task_split(task: int, split: str = "train") -> pd.DataFrame:
     failed = []
     for _, rec in labels_df.iterrows():
         speaker_id = rec["ID"]
-        sex = rec["Sex"]
         for task_key, task_suffix in SPEECH_TASK_SUFFIXES.items():
             wav_path = find_wav(audio_root, speaker_id, task_suffix)
             row = rec.to_dict()
@@ -232,7 +231,7 @@ def extract_task_split(task: int, split: str = "train") -> pd.DataFrame:
                 row.update(_nan_features())
             else:
                 try:
-                    row.update(extract_file(wav_path, task_key, sex=sex))
+                    row.update(extract_file(wav_path, task_key))
                 except Exception as exc:
                     failed.append(f"{speaker_id}_{task_suffix}.wav")
                     logger.warning("Failed %s: %s", wav_path, exc)

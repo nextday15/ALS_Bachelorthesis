@@ -2,6 +2,8 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 
+from src.utils.logger import logger
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = PROJECT_ROOT / "data" / "raw"
 # Mapping of speech task shorthand keys to standard filename suffixes in SAND dataset
@@ -143,15 +145,15 @@ def summarize_inventory(inventory: pd.DataFrame, task: int, split: str) -> None:
     total = len(inventory)
     complete = int(inventory["is_complete"].sum())
     incomplete = inventory[~inventory["is_complete"]]
-    print(f"\n=== Task {task} ({split}) - Audio Inventory ===")
-    print(f"Subjects in label file         : {total}")
-    print(f"Subjects with all 8 recordings : {complete}")
-    print(f"Subjects with missing files    : {len(incomplete)}")
+    logger.info("Task %s (%s) - audio inventory", task, split)
+    logger.info("Subjects in label file: %s", total)
+    logger.info("Subjects with all 8 recordings: %s", complete)
+    logger.info("Subjects with missing files: %s", len(incomplete))
     if len(incomplete):
-        print("\nMissing files per subject (showing up to 20):")
+        logger.warning("Missing files per subject (showing up to 20):")
         for _, row in incomplete.head(20).iterrows():
             missing_keys = [k for k in SPEECH_TASK_SUFFIXES if not row[f"has_{k}"]]
-            print(f"  {row['ID']}: missing {missing_keys}")
+            logger.warning("  %s: missing %s", row["ID"], missing_keys)
 
 # load labels and audio inventory and summarize missing files
 def load_and_check_task(task: int, split: str = "train") -> tuple[pd.DataFrame, pd.DataFrame]:
