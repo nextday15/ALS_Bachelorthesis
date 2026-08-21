@@ -3,7 +3,8 @@ import logging
 
 import pandas as pd
 
-OUTPUT_ROOT = Path("outputs")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+OUTPUT_ROOT = PROJECT_ROOT / "outputs"
 LOG_DIR = OUTPUT_ROOT / "logs"
 PROCESSED_DIR = OUTPUT_ROOT / "processed_data"
 TABLE_DIR = OUTPUT_ROOT / "tables"

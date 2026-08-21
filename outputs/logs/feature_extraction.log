@@ -14,6 +14,7 @@
 2026-08-17 15:05:03,255 | INFO | Extracted rows: 264
 2026-08-17 15:05:03,255 | INFO | Missing recordings: 0
 2026-08-17 15:05:03,285 | INFO | Saved outputs/processed_data/egemaps_task2_test.csv and outputs/processed_data/egemaps_task2_test.parquet
+
 2026-08-21 14:44:57,797 | INFO | Task 1 (train) - eGeMAPSv02
 2026-08-21 14:44:57,798 | INFO | Extracted rows: 2176
 2026-08-21 14:44:57,798 | INFO | Missing recordings: 0

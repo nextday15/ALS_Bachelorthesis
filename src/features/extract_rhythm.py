@@ -149,7 +149,8 @@ def extract_file(wav_path, task_key, sex=None):
         duration = sound.get_total_duration()
         if duration <= 0 or sound.get_number_of_samples() < 1:
             return feats
-    except Exception:
+    except Exception as exc:
+        logger.warning("Failed %s (load): %s", wav_path, exc)
         return feats
 
     try:
@@ -160,8 +161,8 @@ def extract_file(wav_path, task_key, sex=None):
         )
         f0 = pitch.selected_array["frequency"]
         feats["f0_mean"], feats["f0_std"] = _mean_std(f0, positive_only=True)
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("Failed %s (pitch): %s", wav_path, exc)
 
     intensity = None
     try:
@@ -172,7 +173,8 @@ def extract_file(wav_path, task_key, sex=None):
         )
         intens = np.asarray(intensity.values, dtype=float).reshape(-1)
         feats["intensity_mean"], feats["intensity_std"] = _mean_std(intens)
-    except Exception:
+    except Exception as exc:
+        logger.warning("Failed %s (intensity): %s", wav_path, exc)
         intensity = None
 
     try:
@@ -185,14 +187,14 @@ def extract_file(wav_path, task_key, sex=None):
         )
         feats["f1_mean"] = _as_float(call(formant, "Get mean", 1, 0, 0, "Hertz"))
         feats["f2_mean"] = _as_float(call(formant, "Get mean", 2, 0, 0, "Hertz"))
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("Failed %s (formant): %s", wav_path, exc)
 
     if task_key in DDK_TASKS:
         try:
             feats.update(_ddk_metrics(intensity, duration))
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Failed %s (ddk): %s", wav_path, exc)
     return feats
 
 

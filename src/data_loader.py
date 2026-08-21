@@ -2,7 +2,8 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 
-DATA_ROOT = Path("data/raw")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_ROOT = PROJECT_ROOT / "data" / "raw"
 # Mapping of speech task shorthand keys to standard filename suffixes in SAND dataset
 SPEECH_TASK_SUFFIXES = {
     "a": "phonationA",
