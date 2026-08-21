@@ -1,33 +1,32 @@
-2026-08-17 14:58:47,354 | INFO | Task 1 (train) - eGeMAPSv02
-2026-08-17 14:58:47,355 | INFO | Extracted rows: 2176
-2026-08-17 14:58:47,355 | INFO | Missing recordings: 0
-2026-08-17 14:58:47,554 | INFO | Saved outputs/processed_data/egemaps_task1_train.csv and outputs/processed_data/egemaps_task1_train.parquet
-2026-08-17 15:00:32,781 | INFO | Task 1 (test) - eGeMAPSv02
-2026-08-17 15:00:32,782 | INFO | Extracted rows: 536
-2026-08-17 15:00:32,782 | INFO | Missing recordings: 0
-2026-08-17 15:00:32,834 | INFO | Saved outputs/processed_data/egemaps_task1_test.csv and outputs/processed_data/egemaps_task1_test.parquet
-2026-08-17 15:04:09,789 | INFO | Task 2 (train) - eGeMAPSv02
-2026-08-17 15:04:09,789 | INFO | Extracted rows: 1056
-2026-08-17 15:04:09,789 | INFO | Missing recordings: 0
-2026-08-17 15:04:09,888 | INFO | Saved outputs/processed_data/egemaps_task2_train.csv and outputs/processed_data/egemaps_task2_train.parquet
-2026-08-17 15:05:03,255 | INFO | Task 2 (test) - eGeMAPSv02
-2026-08-17 15:05:03,255 | INFO | Extracted rows: 264
-2026-08-17 15:05:03,255 | INFO | Missing recordings: 0
-2026-08-17 15:05:03,285 | INFO | Saved outputs/processed_data/egemaps_task2_test.csv and outputs/processed_data/egemaps_task2_test.parquet
-
-2026-08-21 14:44:57,797 | INFO | Task 1 (train) - eGeMAPSv02
-2026-08-21 14:44:57,798 | INFO | Extracted rows: 2176
-2026-08-21 14:44:57,798 | INFO | Missing recordings: 0
-2026-08-21 14:44:57,995 | INFO | Saved outputs/processed_data/egemaps_task1_train.csv and outputs/processed_data/egemaps_task1_train.parquet
-2026-08-21 14:46:43,483 | INFO | Task 1 (test) - eGeMAPSv02
-2026-08-21 14:46:43,483 | INFO | Extracted rows: 536
-2026-08-21 14:46:43,483 | INFO | Missing recordings: 0
-2026-08-21 14:46:43,534 | INFO | Saved outputs/processed_data/egemaps_task1_test.csv and outputs/processed_data/egemaps_task1_test.parquet
-2026-08-21 14:50:20,165 | INFO | Task 2 (train) - eGeMAPSv02
-2026-08-21 14:50:20,165 | INFO | Extracted rows: 1056
-2026-08-21 14:50:20,165 | INFO | Missing recordings: 0
-2026-08-21 14:50:20,258 | INFO | Saved outputs/processed_data/egemaps_task2_train.csv and outputs/processed_data/egemaps_task2_train.parquet
-2026-08-21 14:51:13,463 | INFO | Task 2 (test) - eGeMAPSv02
-2026-08-21 14:51:13,463 | INFO | Extracted rows: 264
-2026-08-21 14:51:13,463 | INFO | Missing recordings: 0
-2026-08-21 14:51:13,494 | INFO | Saved outputs/processed_data/egemaps_task2_test.csv and outputs/processed_data/egemaps_task2_test.parquet
+2026-08-21 15:43:47,985 | INFO | Task 1 (train) - rhythm / VSA
+2026-08-21 15:43:47,986 | INFO | Extracted rows: 2176
+2026-08-21 15:43:47,986 | INFO | Missing recordings: 0
+2026-08-21 15:43:48,260 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task1_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task1_train.parquet
+2026-08-21 15:44:34,914 | INFO | Task 1 (test) - rhythm / VSA
+2026-08-21 15:44:34,916 | INFO | Extracted rows: 536
+2026-08-21 15:44:34,916 | INFO | Missing recordings: 0
+2026-08-21 15:44:34,963 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task1_test.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task1_test.parquet
+2026-08-21 15:46:13,791 | INFO | Task 2 (train) - rhythm / VSA
+2026-08-21 15:46:13,792 | INFO | Extracted rows: 1056
+2026-08-21 15:46:13,792 | INFO | Missing recordings: 0
+2026-08-21 15:46:13,874 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task2_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task2_train.parquet
+2026-08-21 15:46:38,004 | INFO | Task 2 (test) - rhythm / VSA
+2026-08-21 15:46:38,004 | INFO | Extracted rows: 264
+2026-08-21 15:46:38,004 | INFO | Missing recordings: 0
+2026-08-21 15:46:38,029 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task2_test.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_task2_test.parquet
+2026-08-21 15:58:36,336 | INFO | Task 1 (train) - eGeMAPSv02
+2026-08-21 15:58:36,337 | INFO | Extracted rows: 2176
+2026-08-21 15:58:36,337 | INFO | Missing recordings: 0
+2026-08-21 15:58:36,524 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task1_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task1_train.parquet
+2026-08-21 16:00:22,193 | INFO | Task 1 (test) - eGeMAPSv02
+2026-08-21 16:00:22,193 | INFO | Extracted rows: 536
+2026-08-21 16:00:22,193 | INFO | Missing recordings: 0
+2026-08-21 16:00:22,248 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task1_test.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task1_test.parquet
+2026-08-21 16:03:59,207 | INFO | Task 2 (train) - eGeMAPSv02
+2026-08-21 16:03:59,209 | INFO | Extracted rows: 1056
+2026-08-21 16:03:59,209 | INFO | Missing recordings: 0
+2026-08-21 16:03:59,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_train.parquet
+2026-08-21 16:04:52,967 | INFO | Task 2 (test) - eGeMAPSv02
+2026-08-21 16:04:52,967 | INFO | Extracted rows: 264
+2026-08-21 16:04:52,967 | INFO | Missing recordings: 0
+2026-08-21 16:04:53,001 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_test.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_test.parquet
