@@ -1,6 +1,3 @@
-
-from pathlib import Path
-
 import opensmile
 import pandas as pd
 
@@ -10,8 +7,8 @@ from src.data_loader import (
     SPEECH_TASK_SUFFIXES,
     find_wav,
 )
+from src.utils.logger import logger, save_checkpoint
 
-OUT_DIR = Path("data/processed/egemaps")
 N_EGEMAPS = 88
 
 # -----------------------------------------
@@ -26,6 +23,7 @@ def build_smile():
     if n != N_EGEMAPS:
         raise ValueError(f"expected {N_EGEMAPS} eGeMAPS functionals, got {n}")
     return smile
+
 
 def extract_file(smile, wav_path):
     df = smile.process_file(str(wav_path))
@@ -52,33 +50,31 @@ def extract_task_split(task: int, split: str = "train", smile=None) -> pd.DataFr
             row = rec.to_dict()
             row["task_key"] = task_key
             row["task_suffix"] = task_suffix
-           feats = extract_file(smile, wav_path)
+            feats = extract_file(smile, wav_path)
             row.update(feats)
             rows.append(row)
 
-    print(f"\n=== Task {task} ({split}) - eGeMAPSv02 ===")
-    print(f"Extracted rows                   : {len(rows)}")
-    print(f"Missing recordings               : {len(missing)}")
+    logger.info("Task %s (%s) - eGeMAPSv02", task, split)
+    logger.info("Extracted rows: %s", len(rows))
+    logger.info("Missing recordings: %s", len(missing))
     if missing:
-        print("Missing files (showing up to 20):")
+        logger.info("Missing files (showing up to 20):")
+        for name in missing[:20]:
+            logger.info("  %s", name)
 
     if not rows:
         return pd.DataFrame()
 
     df = pd.DataFrame(rows)
-
     meta_cols = ["ID", "task_key", "task_suffix"]
     extra_cols = [c for c in ["baseline_split", "fold"] if c in df.columns]
     other_cols = [c for c in df.columns if c not in meta_cols + extra_cols]
-    
     return df[meta_cols + extra_cols + other_cols]
 
-def save_features(df: pd.DataFrame, task: int, split: str) -> Path:
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR / f"task{task}_{split}.csv"
-    df.to_csv(out_path, index=False)
-    print(f"Wrote {out_path}")
-    return out_path
+
+def save_features(df: pd.DataFrame, task: int, split: str):
+    csv_path, _ = save_checkpoint(df, f"egemaps_task{task}_{split}")
+    return csv_path
 
 
 if __name__ == "__main__":
