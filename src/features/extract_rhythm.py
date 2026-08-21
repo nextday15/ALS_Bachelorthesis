@@ -17,7 +17,8 @@ VSA_VOWELS = ("i", "a", "u")
 
 PITCH_FLOOR = 75.0
 PITCH_CEILING = 500.0
-N_FORMANTS = 5
+N_FORMANTS = 4
+MAXIMUM_FORMANT = 3800.0
 FORMANT_WINDOW = 0.025
 FORMANT_PRE_EMPHASIS = 50.0
 MIN_PEAK_DISTANCE_S = 0.10
@@ -62,16 +63,6 @@ def _mean_std(values, positive_only=False):
         return np.nan, np.nan
     return float(np.mean(x)), float(np.std(x, ddof=0))
 
-
-def _maximum_formant(sex, f0_mean):
-    text = str(sex).strip().lower()
-    if text in {"m", "male", "0"}:
-        return 5000.0
-    if text in {"f", "female", "1"}:
-        return 5500.0
-    if np.isfinite(f0_mean) and f0_mean < 120:
-        return 5000.0
-    return 5500.0
 
 #-----------------------------------------
 #Rhythm features
@@ -188,7 +179,7 @@ def extract_file(wav_path, task_key, sex=None):
         formant = sound.to_formant_burg(
             time_step=None,
             max_number_of_formants=N_FORMANTS,
-            maximum_formant=_maximum_formant(sex, feats["f0_mean"]),
+            maximum_formant=MAXIMUM_FORMANT,
             window_length=FORMANT_WINDOW,
             pre_emphasis_from=FORMANT_PRE_EMPHASIS,
         )

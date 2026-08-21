@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import StratifiedGroupKFold
 
 DATA_ROOT = Path("data/raw")
 # Mapping of speech task shorthand keys to standard filename suffixes in SAND dataset
@@ -170,8 +170,15 @@ def person_level_group_kfold(df: pd.DataFrame, n_splits: int = 5, group_col: str
             f"n_splits={n_splits} larger than number of subjects ({n_subjects})"
         )
 
-    gkf = GroupKFold(n_splits=n_splits)
-    for fold, (train_idx, val_idx) in enumerate(gkf.split(df, groups=groups)):
+    if "Class" in df.columns:
+        y = df["Class"]
+    elif "ALSFRS--R_end" in df.columns:
+        y = df["ALSFRS--R_end"]
+    else:
+        raise ValueError("need Class or ALSFRS--R_end for stratified group split")
+
+    sgkf = StratifiedGroupKFold(n_splits=n_splits)
+    for fold, (train_idx, val_idx) in enumerate(sgkf.split(df, y, groups=groups)):
         yield fold, df.iloc[train_idx].copy(), df.iloc[val_idx].copy()
 
 
