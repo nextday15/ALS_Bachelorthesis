@@ -30,3 +30,50 @@
 2026-08-21 16:04:52,967 | INFO | Extracted rows: 264
 2026-08-21 16:04:52,967 | INFO | Missing recordings: 0
 2026-08-21 16:04:53,001 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_test.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_task2_test.parquet
+2026-09-16 15:31:24,653 | INFO | Long-table rows after baseline filter: 1752
+2026-09-16 15:31:24,653 | INFO | Unique subjects after baseline filter: 219
+2026-09-16 15:31:24,654 | INFO | Held-out baseline val subjects (excluded): 53
+2026-09-16 15:31:24,666 | INFO | Task 1 baseline train - fused eGeMAPS
+2026-09-16 15:31:24,667 | INFO | Subjects: 219
+2026-09-16 15:31:24,667 | INFO | Speech tasks: 8
+2026-09-16 15:31:24,667 | INFO | Feature columns: 704
+2026-09-16 15:31:24,667 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-09-16 15:31:25,003 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/fused_egemaps_task1_baseline_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/fused_egemaps_task1_baseline_train.parquet
+2026-09-16 15:46:47,179 | INFO | Task 1 baseline train - fused eGeMAPS CV
+2026-09-16 15:46:47,179 | INFO | Subjects: 219
+2026-09-16 15:46:47,179 | INFO | Feature columns: 704
+2026-09-16 15:46:47,179 | INFO | n_splits: 5
+2026-09-16 15:46:47,181 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-09-16 15:46:47,181 | INFO | Model: svm
+2026-09-16 15:46:47,252 | INFO |   fold 0  macro_f1=0.246  acc=0.386  recall=0.259  mae=0.818  n_val=44
+2026-09-16 15:46:47,285 | INFO |   fold 1  macro_f1=0.360  acc=0.455  recall=0.378  mae=0.773  n_val=44
+2026-09-16 15:46:47,318 | INFO |   fold 2  macro_f1=0.334  acc=0.432  recall=0.360  mae=1.045  n_val=44
+2026-09-16 15:46:47,350 | INFO |   fold 3  macro_f1=0.242  acc=0.395  recall=0.267  mae=0.698  n_val=43
+2026-09-16 15:46:47,384 | INFO |   fold 4  macro_f1=0.149  acc=0.250  recall=0.158  mae=0.909  n_val=44
+2026-09-16 15:46:47,384 | INFO | Model: rf
+2026-09-16 15:46:47,765 | INFO |   fold 0  macro_f1=0.279  acc=0.477  recall=0.319  mae=0.750  n_val=44
+2026-09-16 15:46:48,098 | INFO |   fold 1  macro_f1=0.339  acc=0.545  recall=0.344  mae=0.636  n_val=44
+2026-09-16 15:46:48,443 | INFO |   fold 2  macro_f1=0.253  acc=0.477  recall=0.279  mae=0.773  n_val=44
+2026-09-16 15:46:48,794 | INFO |   fold 3  macro_f1=0.259  acc=0.488  recall=0.283  mae=0.651  n_val=43
+2026-09-16 15:46:49,125 | INFO |   fold 4  macro_f1=0.226  acc=0.386  recall=0.242  mae=0.864  n_val=44
+2026-09-16 15:46:49,125 | INFO | Model: xgb
+2026-09-16 15:46:53,826 | INFO |   fold 0  macro_f1=0.391  acc=0.545  recall=0.390  mae=0.545  n_val=44
+2026-09-16 15:46:58,420 | INFO |   fold 1  macro_f1=0.393  acc=0.568  recall=0.394  mae=0.500  n_val=44
+2026-09-16 15:47:03,042 | INFO |   fold 2  macro_f1=0.325  acc=0.432  recall=0.329  mae=0.750  n_val=44
+2026-09-16 15:47:07,638 | INFO |   fold 3  macro_f1=0.417  acc=0.535  recall=0.407  mae=0.488  n_val=43
+2026-09-16 15:47:12,211 | INFO |   fold 4  macro_f1=0.365  acc=0.455  recall=0.364  mae=0.636  n_val=44
+2026-09-16 15:47:12,211 | INFO | Model: ordinal
+2026-09-16 15:47:12,463 | INFO |   fold 0  macro_f1=0.282  acc=0.409  recall=0.276  mae=0.727  n_val=44
+2026-09-16 15:47:12,691 | INFO |   fold 1  macro_f1=0.612  acc=0.477  recall=0.617  mae=0.568  n_val=44
+2026-09-16 15:47:12,880 | INFO |   fold 2  macro_f1=0.315  acc=0.364  recall=0.321  mae=0.818  n_val=44
+2026-09-16 15:47:13,076 | INFO |   fold 3  macro_f1=0.331  acc=0.535  recall=0.331  mae=0.605  n_val=43
+2026-09-16 15:47:13,271 | INFO |   fold 4  macro_f1=0.255  acc=0.409  recall=0.272  mae=0.773  n_val=44
+2026-09-16 15:47:13,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/task1_baseline_cv_fold_metrics.csv
+2026-09-16 15:47:13,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/task1_baseline_cv_summary.csv
+2026-09-16 15:47:13,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/task1_baseline_cv_pooled.csv
+2026-09-16 15:47:13,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/task1_baseline_cv_confusion.csv
+2026-09-16 15:47:13,302 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/task1_baseline_oof_predictions.csv
+2026-09-16 15:47:13,304 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/task1_baseline_cv.md
+2026-09-16 16:18:44,652 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.pdf and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.png
+2026-09-16 16:21:24,700 | INFO | Baseline training class counts (N = 219): [4, 22, 45, 62, 86]
+2026-09-16 16:21:25,062 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.pdf and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.png

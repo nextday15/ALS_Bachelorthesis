@@ -11,7 +11,6 @@ outputs/models/
 *.mp3
 *.zip
 *.xlsx
-*.csv
 *.parquet
 *.pkl
 *.joblib
