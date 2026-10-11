@@ -77,3 +77,89 @@
 2026-09-16 16:18:44,652 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.pdf and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.png
 2026-09-16 16:21:24,700 | INFO | Baseline training class counts (N = 219): [4, 22, 45, 62, 86]
 2026-09-16 16:21:25,062 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.pdf and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/figures/class_distribution.png
+2026-10-11 16:04:53,860 | INFO | eGeMAPS long-table rows after train filter: 1752
+2026-10-11 16:04:53,861 | INFO | eGeMAPS unique subjects after train filter: 219
+2026-10-11 16:04:53,861 | INFO | Held-out val subjects (excluded): 53
+2026-10-11 16:04:53,861 | INFO | rhythm long-table rows after train filter: 1752
+2026-10-11 16:04:53,862 | INFO | rhythm unique subjects after train filter: 219
+2026-10-11 16:04:53,862 | INFO | Held-out val subjects (excluded): 53
+2026-10-11 16:04:53,872 | INFO | Training split - fused eGeMAPS
+2026-10-11 16:04:53,873 | INFO | Subjects: 219
+2026-10-11 16:04:53,873 | INFO | Speech tasks: 8
+2026-10-11 16:04:53,873 | INFO | Feature columns: 704
+2026-10-11 16:04:53,873 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-10-11 16:04:53,881 | INFO | Training split - fused rhythm
+2026-10-11 16:04:53,881 | INFO | Subjects: 219
+2026-10-11 16:04:53,881 | INFO | Speech tasks: 8
+2026-10-11 16:04:53,881 | INFO | Feature columns: 73
+2026-10-11 16:04:53,882 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-10-11 16:04:53,883 | INFO | Training split - fused eGeMAPS + rhythm
+2026-10-11 16:04:53,883 | INFO | Subjects: 219
+2026-10-11 16:04:53,883 | INFO | Feature columns: 777
+2026-10-11 16:04:53,883 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-10-11 16:04:54,266 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/fused_egemaps_rhythm_train.csv and /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/fused_egemaps_rhythm_train.parquet
+2026-10-11 16:06:24,247 | INFO | Training split - fused eGeMAPS + rhythm CV
+2026-10-11 16:06:24,248 | INFO | Subjects: 219
+2026-10-11 16:06:24,248 | INFO | Feature columns: 777
+2026-10-11 16:06:24,248 | INFO | n_splits: 5
+2026-10-11 16:06:24,250 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-10-11 16:06:24,250 | INFO | Model: svm
+2026-10-11 16:06:24,327 | INFO |   fold 0  macro_f1=0.247  acc=0.386  recall=0.259  mae=0.841  n_val=44
+2026-10-11 16:06:24,364 | INFO |   fold 1  macro_f1=0.376  acc=0.477  recall=0.400  mae=0.682  n_val=44
+2026-10-11 16:06:24,402 | INFO |   fold 2  macro_f1=0.337  acc=0.432  recall=0.360  mae=1.000  n_val=44
+2026-10-11 16:06:24,439 | INFO |   fold 3  macro_f1=0.285  acc=0.465  recall=0.323  mae=0.558  n_val=43
+2026-10-11 16:06:24,476 | INFO |   fold 4  macro_f1=0.174  acc=0.295  recall=0.185  mae=0.864  n_val=44
+2026-10-11 16:06:24,476 | INFO | Model: rf
+2026-10-11 16:06:24,831 | INFO |   fold 0  macro_f1=0.239  acc=0.455  recall=0.279  mae=0.773  n_val=44
+2026-10-11 16:06:25,121 | INFO |   fold 1  macro_f1=0.322  acc=0.523  recall=0.328  mae=0.682  n_val=44
+2026-10-11 16:06:25,407 | INFO |   fold 2  macro_f1=0.207  acc=0.432  recall=0.241  mae=0.841  n_val=44
+2026-10-11 16:06:25,696 | INFO |   fold 3  macro_f1=0.257  acc=0.465  recall=0.276  mae=0.674  n_val=43
+2026-10-11 16:06:25,989 | INFO |   fold 4  macro_f1=0.240  acc=0.432  recall=0.269  mae=0.682  n_val=44
+2026-10-11 16:06:25,990 | INFO | Model: xgb
+2026-10-11 16:06:30,885 | INFO |   fold 0  macro_f1=0.413  acc=0.591  recall=0.418  mae=0.545  n_val=44
+2026-10-11 16:06:35,896 | INFO |   fold 1  macro_f1=0.457  acc=0.614  recall=0.456  mae=0.477  n_val=44
+2026-10-11 16:06:40,729 | INFO |   fold 2  macro_f1=0.389  acc=0.500  recall=0.402  mae=0.614  n_val=44
+2026-10-11 16:06:45,689 | INFO |   fold 3  macro_f1=0.356  acc=0.512  recall=0.360  mae=0.488  n_val=43
+2026-10-11 16:06:50,467 | INFO |   fold 4  macro_f1=0.329  acc=0.432  recall=0.345  mae=0.705  n_val=44
+2026-10-11 16:06:50,468 | INFO | Model: ordinal
+2026-10-11 16:06:50,948 | INFO |   fold 0  macro_f1=0.266  acc=0.386  recall=0.264  mae=0.727  n_val=44
+2026-10-11 16:06:51,176 | INFO |   fold 1  macro_f1=0.576  acc=0.455  recall=0.589  mae=0.591  n_val=44
+2026-10-11 16:06:51,446 | INFO |   fold 2  macro_f1=0.339  acc=0.409  recall=0.345  mae=0.773  n_val=44
+2026-10-11 16:06:51,683 | INFO |   fold 3  macro_f1=0.329  acc=0.558  recall=0.338  mae=0.558  n_val=43
+2026-10-11 16:06:51,930 | INFO |   fold 4  macro_f1=0.246  acc=0.386  recall=0.264  mae=0.773  n_val=44
+2026-10-11 16:06:51,959 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/rhythm_cv_fold_metrics.csv
+2026-10-11 16:06:51,960 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/rhythm_cv_summary.csv
+2026-10-11 16:06:51,960 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/rhythm_cv_pooled.csv
+2026-10-11 16:06:51,960 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/rhythm_confusion.csv
+2026-10-11 16:06:51,960 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/rhythm_oof_predictions.csv
+2026-10-11 16:25:46,500 | INFO | Training split - fused eGeMAPS, 4-fold CV
+2026-10-11 16:25:46,500 | INFO | Experiment: egemaps_fold4
+2026-10-11 16:25:46,500 | INFO | Subjects: 219
+2026-10-11 16:25:46,500 | INFO | Feature columns: 704
+2026-10-11 16:25:46,501 | INFO | n_splits: 4
+2026-10-11 16:25:46,502 | INFO | Class counts: {1: 4, 2: 22, 3: 45, 4: 62, 5: 86}
+2026-10-11 16:25:46,503 | INFO | Model: svm
+2026-10-11 16:25:46,566 | INFO |   fold 0  macro_f1=0.313  acc=0.436  recall=0.354  mae=0.836  n_val=55
+2026-10-11 16:25:46,596 | INFO |   fold 1  macro_f1=0.281  acc=0.382  recall=0.282  mae=0.745  n_val=55
+2026-10-11 16:25:46,628 | INFO |   fold 2  macro_f1=0.311  acc=0.463  recall=0.315  mae=0.778  n_val=54
+2026-10-11 16:25:46,660 | INFO |   fold 3  macro_f1=0.256  acc=0.382  recall=0.287  mae=0.764  n_val=55
+2026-10-11 16:25:46,660 | INFO | Model: rf
+2026-10-11 16:25:46,998 | INFO |   fold 0  macro_f1=0.353  acc=0.545  recall=0.370  mae=0.618  n_val=55
+2026-10-11 16:25:47,271 | INFO |   fold 1  macro_f1=0.297  acc=0.473  recall=0.301  mae=0.727  n_val=55
+2026-10-11 16:25:47,545 | INFO |   fold 2  macro_f1=0.211  acc=0.426  recall=0.240  mae=0.815  n_val=54
+2026-10-11 16:25:47,829 | INFO |   fold 3  macro_f1=0.199  acc=0.400  recall=0.242  mae=0.836  n_val=55
+2026-10-11 16:25:47,829 | INFO | Model: xgb
+2026-10-11 16:25:51,907 | INFO |   fold 0  macro_f1=0.398  acc=0.545  recall=0.413  mae=0.600  n_val=55
+2026-10-11 16:25:55,966 | INFO |   fold 1  macro_f1=0.379  acc=0.491  recall=0.378  mae=0.618  n_val=55
+2026-10-11 16:26:00,234 | INFO |   fold 2  macro_f1=0.260  acc=0.444  recall=0.270  mae=0.648  n_val=54
+2026-10-11 16:26:04,240 | INFO |   fold 3  macro_f1=0.344  acc=0.455  recall=0.338  mae=0.673  n_val=55
+2026-10-11 16:26:04,240 | INFO | Model: ordinal
+2026-10-11 16:26:04,507 | INFO |   fold 0  macro_f1=0.318  acc=0.455  recall=0.333  mae=0.673  n_val=55
+2026-10-11 16:26:04,763 | INFO |   fold 1  macro_f1=0.322  acc=0.455  recall=0.322  mae=0.655  n_val=55
+2026-10-11 16:26:04,982 | INFO |   fold 2  macro_f1=0.545  acc=0.481  recall=0.530  mae=0.593  n_val=54
+2026-10-11 16:26:05,262 | INFO |   fold 3  macro_f1=0.381  acc=0.473  recall=0.416  mae=0.618  n_val=55
+2026-10-11 16:26:05,307 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/egemaps_fold4_cv_fold_metrics.csv
+2026-10-11 16:26:05,307 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/egemaps_fold4_cv_summary.csv
+2026-10-11 16:26:05,307 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/egemaps_fold4_cv_pooled.csv
+2026-10-11 16:26:05,307 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/tables/egemaps_fold4_confusion.csv
+2026-10-11 16:26:05,307 | INFO | Saved /Users/zhangyunxi/Documents/BA/ALS_Thesis_Code/outputs/processed_data/egemaps_fold4_oof_predictions.csv

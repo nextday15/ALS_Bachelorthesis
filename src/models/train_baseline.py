@@ -14,10 +14,33 @@ from src.utils.logger import (
 )
 
 META_COLS = ["ID", "Age", "Sex", "Class", "baseline_split"]
-MATRIX_NAME = "fused_egemaps_task1_baseline_train"
 N_SUBJECTS = 219
-N_SPLITS = 5
 BASELINE_TRAIN = "train"
+
+EXPERIMENTS = {
+    "rhythm": {
+        "matrix": "fused_egemaps_rhythm_train",
+        "n_splits": 5,
+        "table_prefix": "rhythm",
+        "oof_name": "rhythm_oof_predictions",
+        "log": "Training split - fused eGeMAPS + rhythm CV",
+    },
+    "egemaps_fold4": {
+        "matrix": "fused_egemaps_task1_baseline_train",
+        "n_splits": 4,
+        "table_prefix": "egemaps_fold4",
+        "oof_name": "egemaps_fold4_oof_predictions",
+        "log": "Training split - fused eGeMAPS, 4-fold CV",
+    },
+}
+
+EXPERIMENT = "egemaps_fold4"
+_CFG = EXPERIMENTS[EXPERIMENT]
+MATRIX_NAME = _CFG["matrix"]
+N_SPLITS = _CFG["n_splits"]
+TABLE_PREFIX = _CFG["table_prefix"]
+OOF_NAME = _CFG["oof_name"]
+CV_LOG = _CFG["log"]
 
 
 def load_matrix() -> pd.DataFrame:
@@ -79,7 +102,8 @@ def _fit_predict(pipe, name, X_train, y_train, X_val):
 
 def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd.DataFrame]:
     feat_cols = _feature_cols(df)
-    logger.info("Task 1 baseline train - fused eGeMAPS CV")
+    logger.info("%s", CV_LOG)
+    logger.info("Experiment: %s", EXPERIMENT)
     logger.info("Subjects: %s", len(df))
     logger.info("Feature columns: %s", len(feat_cols))
     logger.info("n_splits: %s", n_splits)
@@ -167,11 +191,11 @@ def save_results(fold_df, oof_df):
     pooled_df = _pooled_scores(oof_df)
     cm_df = _confusion_tables(oof_df)
 
-    fold_path = TABLE_DIR / "baseline_cv_fold_metrics.csv"
-    summary_path = TABLE_DIR / "baseline_cv_summary.csv"
-    pooled_path = TABLE_DIR / "baseline_cv_pooled.csv"
-    cm_path = TABLE_DIR / "baseline_confusion.csv"
-    oof_path = PROCESSED_DIR / "task1_baseline_oof_predictions.csv"
+    fold_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_fold_metrics.csv"
+    summary_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_summary.csv"
+    pooled_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_pooled.csv"
+    cm_path = TABLE_DIR / f"{TABLE_PREFIX}_confusion.csv"
+    oof_path = PROCESSED_DIR / f"{OOF_NAME}.csv"
 
     fold_df.to_csv(fold_path, index=False)
     summary_df.to_csv(summary_path, index=False)
