@@ -275,7 +275,6 @@ def save_features(df: pd.DataFrame, task: int, split: str):
 
 
 if __name__ == "__main__":
-    for task in (1, 2):
-        for split in ("train", "test"):
-            df = extract_task_split(task, split)
-            save_features(df, task, split)
+    for split in ("train", "test"):
+        df = extract_task_split(1, split)
+        save_features(df, 1, split)

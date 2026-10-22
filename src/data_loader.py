@@ -29,21 +29,10 @@ TASK_PATHS = {
             "audio_root": DATA_ROOT / "task1_test" / "test",
         },
     },
-    2: {
-        "train": {
-            "labels": DATA_ROOT / "task2_training" / "sand_task_2.xlsx",
-            "audio_root": DATA_ROOT / "task2_training" / "training",
-        },
-        "test": {
-            "labels": DATA_ROOT / "task2_test" / "sand_task2_test.xlsx",
-            "audio_root": DATA_ROOT / "task2_test" / "test",
-        },
-    },
 }
 # data check
 LABEL_COLUMNS = {
     1: ["ID", "Age", "Sex", "Class"],
-    2: ["ID", "Age", "Sex", "Months", "ALSFRS--R_start", "ALSFRS--R_end"],
 }
 # match sheet name
 SHEET_KEYWORDS = {
@@ -173,12 +162,9 @@ def person_level_group_kfold(df: pd.DataFrame, n_splits: int = 5, group_col: str
             f"n_splits={n_splits} larger than number of subjects ({n_subjects})"
         )
 
-    if "Class" in df.columns:
-        y = df["Class"]
-    elif "ALSFRS--R_end" in df.columns:
-        y = df["ALSFRS--R_end"]
-    else:
-        raise ValueError("need Class or ALSFRS--R_end for stratified group split")
+    if "Class" not in df.columns:
+        raise ValueError("need Class for stratified group split")
+    y = df["Class"]
 
     sgkf = StratifiedGroupKFold(n_splits=n_splits)
     for fold, (train_idx, val_idx) in enumerate(sgkf.split(df, y, groups=groups)):
@@ -186,6 +172,5 @@ def person_level_group_kfold(df: pd.DataFrame, n_splits: int = 5, group_col: str
 
 
 if __name__ == "__main__":
-    for task in (1, 2):
-        load_and_check_task(task, split="train")
-        load_and_check_task(task, split="test")
+    load_and_check_task(1, split="train")
+    load_and_check_task(1, split="test")

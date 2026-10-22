@@ -7,19 +7,14 @@ META_COLS = ["ID", "task_key", "task_suffix", "baseline_split", "Age", "Sex", "C
 WIDE_META_COLS = ["ID", "Age", "Sex", "Class", "baseline_split"]
 BASELINE_TRAIN = "train"
 N_EGEMAPS = 88
+DDK_TASK_KEYS = ("pa", "ta", "ka")
 RHYTHM_TASK_COLS = [
-    "f1_mean",
-    "f2_mean",
-    "f0_mean",
-    "f0_std",
-    "intensity_mean",
-    "intensity_std",
     "ddk_rate",
     "pause_ratio",
     "pvi",
 ]
 VSA_COL = "vsa"
-EGEMAPS_RHYTHM_MATRIX = "fused_egemaps_rhythm_train"
+EGEMAPS_DDK_VSA_MATRIX = "fused_egemaps_ddk_vsa_train"
 
 
 def load_egemaps_task1_train() -> pd.DataFrame:
@@ -108,7 +103,7 @@ def fuse_rhythm_by_subject(df: pd.DataFrame) -> pd.DataFrame:
     meta = _subject_meta(df)
     vsa = df.drop_duplicates("ID").set_index("ID")[[VSA_COL]]
     parts = []
-    for task_key in SPEECH_TASK_SUFFIXES:
+    for task_key in DDK_TASK_KEYS:
         sub = df.loc[df["task_key"] == task_key, ["ID"] + RHYTHM_TASK_COLS]
         if sub.empty:
             raise ValueError(f"no rows for task_key={task_key}")
@@ -120,9 +115,9 @@ def fuse_rhythm_by_subject(df: pd.DataFrame) -> pd.DataFrame:
     wide = pd.concat(parts, axis=1)
     out = meta.join(wide, how="inner").join(vsa, how="inner").reset_index()
     feat_wide = _wide_feature_cols(out)
-    logger.info("Training split - fused rhythm")
+    logger.info("Training split - fused DDK + VSA")
     logger.info("Subjects: %s", len(out))
-    logger.info("Speech tasks: %s", len(SPEECH_TASK_SUFFIXES))
+    logger.info("DDK tasks: %s", len(DDK_TASK_KEYS))
     logger.info("Feature columns: %s", len(feat_wide))
     logger.info("Class counts: %s", out["Class"].value_counts().sort_index().to_dict())
     return out
@@ -160,7 +155,7 @@ def build_egemaps_rhythm_train() -> pd.DataFrame:
             f"rhythm={len(rhythm)}, merged={len(out)}"
         )
     feat_wide = _wide_feature_cols(out)
-    logger.info("Training split - fused eGeMAPS + rhythm")
+    logger.info("Training split - fused eGeMAPS + DDK + VSA")
     logger.info("Subjects: %s", len(out))
     logger.info("Feature columns: %s", len(feat_wide))
     logger.info("Class counts: %s", out["Class"].value_counts().sort_index().to_dict())
@@ -173,4 +168,4 @@ def save_matrix(df: pd.DataFrame, name: str = "fused_egemaps_task1_baseline_trai
 
 
 if __name__ == "__main__":
-    save_matrix(build_egemaps_rhythm_train(), name=EGEMAPS_RHYTHM_MATRIX)
+    save_matrix(build_egemaps_rhythm_train(), name=EGEMAPS_DDK_VSA_MATRIX)

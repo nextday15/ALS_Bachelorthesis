@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, StandardScaler
@@ -7,7 +8,10 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from mord import LogisticAT
 
+from src.features.correlation_filter import CorrelationFilter
+
 RANDOM_STATE = 42
+CORR_THRESHOLD = 0.9
 
 
 def _finite_or_nan(X):
@@ -15,22 +19,33 @@ def _finite_or_nan(X):
     return np.where(np.isfinite(arr), arr, np.nan)
 
 
-def _preprocess():
-    return [
+def _preprocess(use_corr_filter=False, corr_threshold=CORR_THRESHOLD):
+    steps = [
         ("clean", FunctionTransformer(_finite_or_nan, validate=False)),
         ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler()),
     ]
+    if use_corr_filter:
+        steps.append(("var", VarianceThreshold(threshold=0.0)))
+        steps.append(("corr", CorrelationFilter(threshold=corr_threshold)))
+    steps.append(("scaler", StandardScaler()))
+    return steps
 
 
 # XGB and ordinal logit expect 0-based consecutive labels
 ENCODED_MODELS = {"xgb", "ordinal"}
 
 
-def build_pipelines(random_state=RANDOM_STATE):
+def build_pipelines(
+    random_state=RANDOM_STATE,
+    use_corr_filter=False,
+    corr_threshold=CORR_THRESHOLD,
+):
     return {
         "svm": Pipeline(
-            _preprocess()
+            _preprocess(
+                use_corr_filter=use_corr_filter,
+                corr_threshold=corr_threshold,
+            )
             + [
                 (
                     "clf",
@@ -43,7 +58,10 @@ def build_pipelines(random_state=RANDOM_STATE):
             ]
         ),
         "rf": Pipeline(
-            _preprocess()
+            _preprocess(
+                use_corr_filter=use_corr_filter,
+                corr_threshold=corr_threshold,
+            )
             + [
                 (
                     "clf",
@@ -57,7 +75,10 @@ def build_pipelines(random_state=RANDOM_STATE):
             ]
         ),
         "xgb": Pipeline(
-            _preprocess()
+            _preprocess(
+                use_corr_filter=use_corr_filter,
+                corr_threshold=corr_threshold,
+            )
             + [
                 (
                     "clf",
@@ -77,7 +98,10 @@ def build_pipelines(random_state=RANDOM_STATE):
             ]
         ),
         "ordinal": Pipeline(
-            _preprocess()
+            _preprocess(
+                use_corr_filter=use_corr_filter,
+                corr_threshold=corr_threshold,
+            )
             + [("clf", LogisticAT(alpha=1.0))]
         ),
     }

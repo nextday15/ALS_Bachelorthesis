@@ -18,29 +18,33 @@ N_SUBJECTS = 219
 BASELINE_TRAIN = "train"
 
 EXPERIMENTS = {
-    "rhythm": {
-        "matrix": "fused_egemaps_rhythm_train",
-        "n_splits": 5,
-        "table_prefix": "rhythm",
-        "oof_name": "rhythm_oof_predictions",
-        "log": "Training split - fused eGeMAPS + rhythm CV",
-    },
     "egemaps_fold4": {
         "matrix": "fused_egemaps_task1_baseline_train",
         "n_splits": 4,
         "table_prefix": "egemaps_fold4",
         "oof_name": "egemaps_fold4_oof_predictions",
         "log": "Training split - fused eGeMAPS, 4-fold CV",
+        "corr_filter": False,
+    },
+    "ddk_vsa": {
+        "matrix": "fused_egemaps_ddk_vsa_train",
+        "n_splits": 5,
+        "table_prefix": "ddk_vsa",
+        "oof_name": "ddk_vsa_oof_predictions",
+        "log": "Training split - fused eGeMAPS + DDK + VSA CV",
+        "corr_filter": False,
     },
 }
 
-EXPERIMENT = "egemaps_fold4"
+EXPERIMENT = "ddk_vsa"
 _CFG = EXPERIMENTS[EXPERIMENT]
 MATRIX_NAME = _CFG["matrix"]
 N_SPLITS = _CFG["n_splits"]
 TABLE_PREFIX = _CFG["table_prefix"]
 OOF_NAME = _CFG["oof_name"]
 CV_LOG = _CFG["log"]
+USE_CORR_FILTER = _CFG["corr_filter"]
+CORR_THRESHOLD = _CFG.get("corr_threshold", 0.9)
 
 
 def load_matrix() -> pd.DataFrame:
@@ -83,6 +87,13 @@ def _xy(df: pd.DataFrame, feat_cols: list[str]):
     return X, y
 
 
+def _n_kept_features(pipe, n_in: int) -> int:
+    if "corr" in pipe.named_steps:
+        return int(np.sum(pipe.named_steps["corr"].keep_mask_))
+    clf = pipe.named_steps["clf"]
+    return int(getattr(clf, "n_features_in_", n_in))
+
+
 def _fit_predict(pipe, name, X_train, y_train, X_val):
     y_fit = y_train
     mapping = None
@@ -97,7 +108,8 @@ def _fit_predict(pipe, name, X_train, y_train, X_val):
     y_pred = pipe.predict(X_val)
     if mapping is not None:
         y_pred = _decode_labels(y_pred, mapping)
-    return y_pred
+    n_kept = _n_kept_features(pipe, X_train.shape[1])
+    return y_pred, n_kept
 
 
 def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -107,9 +119,14 @@ def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd
     logger.info("Subjects: %s", len(df))
     logger.info("Feature columns: %s", len(feat_cols))
     logger.info("n_splits: %s", n_splits)
+    logger.info("corr_filter: %s", USE_CORR_FILTER)
+    logger.info("corr_threshold: %s", CORR_THRESHOLD if USE_CORR_FILTER else None)
     logger.info("Class counts: %s", df["Class"].value_counts().sort_index().to_dict())
 
-    templates = build_pipelines()
+    templates = build_pipelines(
+        use_corr_filter=USE_CORR_FILTER,
+        corr_threshold=CORR_THRESHOLD,
+    )
     fold_rows = []
     oof_rows = []
 
@@ -119,20 +136,22 @@ def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd
             X_train, y_train = _xy(train_df, feat_cols)
             X_val, y_val = _xy(val_df, feat_cols)
             pipe = clone(template)
-            y_pred = _fit_predict(pipe, name, X_train, y_train, X_val)
+            y_pred, n_kept = _fit_predict(pipe, name, X_train, y_train, X_val)
             scores = classification_scores(y_val, y_pred)
             scores["model"] = name
             scores["fold"] = fold
             scores["n_val"] = len(val_df)
+            scores["n_features"] = n_kept
             fold_rows.append(scores)
             logger.info(
-                "  fold %s  macro_f1=%.3f  acc=%.3f  recall=%.3f  mae=%.3f  n_val=%s",
+                "  fold %s  macro_f1=%.3f  acc=%.3f  recall=%.3f  mae=%.3f  n_val=%s  n_feat=%s",
                 fold,
                 scores["macro_f1"],
                 scores["accuracy"],
                 scores["macro_recall"],
                 scores["mae"],
                 scores["n_val"],
+                n_kept,
             )
             for speaker_id, y_t, y_p in zip(val_df["ID"], y_val, y_pred):
                 oof_rows.append(
