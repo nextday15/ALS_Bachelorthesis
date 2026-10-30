@@ -131,9 +131,11 @@ def run_anova_curve(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Da
 
 def save_tables(rank_df, summary_df, feature_summary):
     ensure_output_dirs()
-    rank_path = TABLE_DIR / "anova_f_by_rank_fold.csv"
-    summary_path = TABLE_DIR / "anova_f_by_rank_summary.csv"
-    feature_path = TABLE_DIR / "anova_f_by_feature.csv"
+    out_dir = TABLE_DIR / "analyse"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rank_path = out_dir / "anova_f_by_rank_fold.csv"
+    summary_path = out_dir / "anova_f_by_rank_summary.csv"
+    feature_path = out_dir / "anova_f_by_feature.csv"
     rank_df.to_csv(rank_path, index=False)
     summary_df.to_csv(summary_path, index=False)
     feature_summary.to_csv(feature_path, index=False)

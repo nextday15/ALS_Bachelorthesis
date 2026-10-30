@@ -137,7 +137,7 @@ def build_task1_baseline_train() -> pd.DataFrame:
     return fuse_egemaps_by_subject(train_df)
 
 
-def build_egemaps_rhythm_train() -> pd.DataFrame:
+def build_egemaps_ddk_vsa_train() -> pd.DataFrame:
     egemaps_long = load_egemaps_task1_train()
     rhythm_long = load_rhythm_task1_train()
     egemaps_train = select_baseline_train(egemaps_long)
@@ -168,4 +168,4 @@ def save_matrix(df: pd.DataFrame, name: str = "fused_egemaps_task1_baseline_trai
 
 
 if __name__ == "__main__":
-    save_matrix(build_egemaps_rhythm_train(), name=EGEMAPS_DDK_VSA_MATRIX)
+    save_matrix(build_egemaps_ddk_vsa_train(), name=EGEMAPS_DDK_VSA_MATRIX)

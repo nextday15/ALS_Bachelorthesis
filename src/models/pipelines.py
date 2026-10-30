@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, StandardScaler
@@ -8,6 +7,7 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from mord import LogisticAT
 
+from src.features.anova_filter import ANOVAFFilter
 from src.features.correlation_filter import CorrelationFilter
 
 RANDOM_STATE = 42
@@ -19,14 +19,25 @@ def _finite_or_nan(X):
     return np.where(np.isfinite(arr), arr, np.nan)
 
 
-def _preprocess(use_corr_filter=False, corr_threshold=CORR_THRESHOLD):
+def _preprocess(
+    anova_f=None,
+    use_corr_filter=False,
+    corr_threshold=CORR_THRESHOLD,
+    corr_rank="column_order",
+):
     steps = [
         ("clean", FunctionTransformer(_finite_or_nan, validate=False)),
         ("imputer", SimpleImputer(strategy="median")),
     ]
+    if anova_f is not None:
+        steps.append(("anova", ANOVAFFilter(threshold=anova_f)))
     if use_corr_filter:
-        steps.append(("var", VarianceThreshold(threshold=0.0)))
-        steps.append(("corr", CorrelationFilter(threshold=corr_threshold)))
+        steps.append(
+            (
+                "corr",
+                CorrelationFilter(threshold=corr_threshold, rank=corr_rank),
+            )
+        )
     steps.append(("scaler", StandardScaler()))
     return steps
 
@@ -37,15 +48,20 @@ ENCODED_MODELS = {"xgb", "ordinal"}
 
 def build_pipelines(
     random_state=RANDOM_STATE,
+    anova_f=None,
     use_corr_filter=False,
     corr_threshold=CORR_THRESHOLD,
+    corr_rank="column_order",
 ):
+    pre_kwargs = dict(
+        anova_f=anova_f,
+        use_corr_filter=use_corr_filter,
+        corr_threshold=corr_threshold,
+        corr_rank=corr_rank,
+    )
     return {
         "svm": Pipeline(
-            _preprocess(
-                use_corr_filter=use_corr_filter,
-                corr_threshold=corr_threshold,
-            )
+            _preprocess(**pre_kwargs)
             + [
                 (
                     "clf",
@@ -58,10 +74,7 @@ def build_pipelines(
             ]
         ),
         "rf": Pipeline(
-            _preprocess(
-                use_corr_filter=use_corr_filter,
-                corr_threshold=corr_threshold,
-            )
+            _preprocess(**pre_kwargs)
             + [
                 (
                     "clf",
@@ -75,10 +88,7 @@ def build_pipelines(
             ]
         ),
         "xgb": Pipeline(
-            _preprocess(
-                use_corr_filter=use_corr_filter,
-                corr_threshold=corr_threshold,
-            )
+            _preprocess(**pre_kwargs)
             + [
                 (
                     "clf",
@@ -98,10 +108,6 @@ def build_pipelines(
             ]
         ),
         "ordinal": Pipeline(
-            _preprocess(
-                use_corr_filter=use_corr_filter,
-                corr_threshold=corr_threshold,
-            )
-            + [("clf", LogisticAT(alpha=1.0))]
+            _preprocess(**pre_kwargs) + [("clf", LogisticAT(alpha=1.0))]
         ),
     }

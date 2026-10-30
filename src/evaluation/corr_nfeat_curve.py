@@ -112,8 +112,10 @@ def run_nfeat_curve(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 def save_tables(fold_df: pd.DataFrame, summary_df: pd.DataFrame):
     ensure_output_dirs()
-    fold_path = TABLE_DIR / "corr_nfeat_curve_fold.csv"
-    summary_path = TABLE_DIR / "corr_nfeat_curve_summary.csv"
+    out_dir = TABLE_DIR / "analyse"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    fold_path = out_dir / "corr_nfeat_curve_fold.csv"
+    summary_path = out_dir / "corr_nfeat_curve_summary.csv"
     fold_df.to_csv(fold_path, index=False)
     summary_df.to_csv(summary_path, index=False)
     logger.info("Saved %s", fold_path)

@@ -1,11 +1,13 @@
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.feature_selection import f_classif
 from sklearn.utils.validation import check_is_fitted
 
 
 class CorrelationFilter(BaseEstimator, TransformerMixin):
-    def __init__(self, threshold=0.9):
+    def __init__(self, threshold=0.9, rank="column_order"):
         self.threshold = threshold
+        self.rank = rank
 
     def fit(self, X, y=None):
         X = np.asarray(X, dtype=float)
@@ -24,8 +26,19 @@ class CorrelationFilter(BaseEstimator, TransformerMixin):
             corr = np.array([[1.0]])
         corr = np.nan_to_num(corr, nan=0.0)
 
+        if self.rank == "anova_f":
+            if y is None:
+                raise ValueError("rank='anova_f' requires y")
+            F, _ = f_classif(X, y)
+            F = np.nan_to_num(np.asarray(F, dtype=float)[candidates], nan=-np.inf)
+            visit = np.argsort(-F, kind="mergesort")
+        elif self.rank == "column_order":
+            visit = np.arange(candidates.size)
+        else:
+            raise ValueError(f"unknown rank={self.rank}")
+
         kept_local = []
-        for loc in range(candidates.size):
+        for loc in visit:
             redundant = False
             for kept in kept_local:
                 r = corr[loc, kept]
@@ -33,7 +46,7 @@ class CorrelationFilter(BaseEstimator, TransformerMixin):
                     redundant = True
                     break
             if not redundant:
-                kept_local.append(loc)
+                kept_local.append(int(loc))
 
         keep = np.zeros(n_features, dtype=bool)
         keep[candidates[kept_local]] = True
