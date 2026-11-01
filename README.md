@@ -1,2 +1,68 @@
-Bachelorarbeitsthema:
-Klassifikation und Progressionsvorhersage des Dysarthrie-Schweregrads bei ALS auf Basis akustischer Sprach-Feature
+# ALS dysarthria severity classification (SAND Task 1)
+
+Bachelor thesis code: 5-class severity prediction (1 = severe … 5 = healthy) from SAND Task 1 speech. Primary metric is Macro-F1. Official Validation Baseline (53 speakers) is frozen; all tuning and CV use Training Baseline only (219 speakers). The unlabeled test set is not used for model selection.
+
+## Data
+
+- Eight recordings per speaker: vowels `/a,e,i,o,u/` and DDK `/pa,ta,ka/`
+- Native audio is 8 kHz, mono, 16-bit. No resampling, no duration padding
+- Person-level `StratifiedGroupKFold` by speaker ID (default 5-fold)
+- Labels and splits: `data/raw/task1_training/sand_task_1.xlsx`
+
+## Features
+
+- eGeMAPSv02 functionals: 88 × 8 tasks = **704**
+- Extra DDK (`ddk_rate`, `pause_ratio`, `pvi` on `/pa,ta,ka/`) + VSA from `/i,a,u/` F1–F2 = **10**
+- Fused matrix: **219 × 714** (`fused_egemaps_ddk_vsa_train`)
+- Praat formants use `maximum_formant=3800` (Nyquist 4 kHz)
+
+## Models and preprocessing
+
+SVM-RBF, Random Forest, XGBoost, ordinal logit (`mord.LogisticAT`). Fixed baseline hyperparameters (`random_state=42`). SVM/RF use `class_weight="balanced"`; XGB uses balanced `sample_weight`. No class resampling.
+
+In-fold only: `inf → NaN` → median impute → optional ANOVA / Pearson → `StandardScaler`.
+
+Feature selection (when enabled), also in-fold:
+
+- ANOVA: keep features with `f_classif` F ≥ 4
+- Pearson: drop pairs with `|r| > 0.9`, keep the higher-F feature
+
+## Experiments so far
+
+Pooled Macro-F1 (`outputs/tables/result_comparison.csv`):
+
+| experiment | n_features | svm | rf | xgb | ordinal |
+|---|---|---|---|---|---|
+| baseline (eGeMAPS) | 704 | 0.274 | 0.276 | 0.380 | 0.360 |
+| rhythm (+ DDK/VSA) | 714 | 0.280 | 0.299 | 0.366 | 0.364 |
+| anova (F ≥ 4) | 123.8 | 0.382 | 0.303 | 0.377 | 0.435 |
+| pearson (F ≥ 4 then \|r\| > 0.9) | 106.6 | 0.404 | 0.318 | 0.361 | 0.405 |
+
+`n_features` for anova/pearson is the 5-fold mean. Nested hyperparameter search and the frozen 53-speaker evaluation are not done yet.
+
+## Run
+
+From the repo root, with `PYTHONPATH=.` (Anaconda Python with `sklearn`, `xgboost`, `mord`, `opensmile`, `parselmouth`):
+
+```bash
+python -m src.features.extract_eGeMAPS
+python -m src.features.extract_rhythm
+python -m src.features.build_matrices
+python -m src.models.train_baseline
+python -m src.evaluation.corr_nfeat_curve
+python -m src.evaluation.anova_f_curve
+```
+
+Switch the active CV run in `src/models/train_baseline.py` via `EXPERIMENT`.
+
+## Layout
+
+```
+src/data_loader.py          # labels, audio inventory, SGKF
+src/features/               # extraction, 714-d fusion, ANOVA/Pearson filters
+src/models/                 # pipelines and CV
+src/evaluation/             # metrics, class-distribution plot, filter curves
+outputs/processed_data/     # long tables, fused matrices, OOF predictions
+outputs/tables/             # CV results; 0_baseline, 1.1 Rhythm, 2.1 Anova, 3.1 Pearson
+outputs/figures/            # class_distribution, corr_nfeat_curve, anova_f_curve
+```
