@@ -1,12 +1,12 @@
-# ALS dysarthria severity classification (SAND Task 1)
+# Bachelor Thesis: Machine Learning-Based Classification of ALS Dysarthria Severity Using Acoustic Features
 
-Bachelor thesis code: 5-class severity prediction (1 = severe … 5 = healthy) from SAND Task 1 speech. Primary metric is Macro-F1. Official Validation Baseline (53 speakers) is frozen; all tuning and CV use Training Baseline only (219 speakers). The unlabeled test set is not used for model selection.
+5-class severity prediction from SAND Task 1 speech using Macro-F1 as primary metric.
 
 ## Data
 
 - Eight recordings per speaker: vowels `/a,e,i,o,u/` and DDK `/pa,ta,ka/`
 - Native audio is 8 kHz, mono, 16-bit. No resampling, no duration padding
-- Person-level `StratifiedGroupKFold` by speaker ID (default 5-fold)
+- Person-level `StratifiedGroupKFold` by speaker ID (k=5)
 - Labels and splits: `data/raw/task1_training/sand_task_1.xlsx`
 
 ## Features
@@ -22,7 +22,7 @@ SVM-RBF, Random Forest, XGBoost, ordinal logit (`mord.LogisticAT`). Fixed baseli
 
 In-fold only: `inf → NaN` → median impute → optional ANOVA / Pearson → `StandardScaler`.
 
-Feature selection (when enabled), also in-fold:
+Feature selection also in-fold:
 
 - ANOVA: keep features with `f_classif` F ≥ 4
 - Pearson: drop pairs with `|r| > 0.9`, keep the higher-F feature
@@ -38,7 +38,7 @@ Pooled Macro-F1 (`outputs/tables/result_comparison.csv`):
 | anova (F ≥ 4) | 123.8 | 0.382 | 0.303 | 0.377 | 0.435 |
 | pearson (F ≥ 4 then \|r\| > 0.9) | 106.6 | 0.404 | 0.318 | 0.361 | 0.405 |
 
-`n_features` for anova/pearson is the 5-fold mean. Nested hyperparameter search and the frozen 53-speaker evaluation are not done yet.
+`n_features` for anova/pearson is the 5-fold mean.
 
 ## Run
 
@@ -66,3 +66,10 @@ outputs/processed_data/     # long tables, fused matrices, OOF predictions
 outputs/tables/             # CV results; 0_baseline, 1.1 Rhythm, 2.1 Anova, 3.1 Pearson
 outputs/figures/            # class_distribution, corr_nfeat_curve, anova_f_curve
 ```
+
+## TODO
+
+- Hyperparameter optimization using `GridSearchCV`
+- Feature group ablation study
+- SHAP-based feature importance analysis
+- Final model evaluation on the held-out validation set
