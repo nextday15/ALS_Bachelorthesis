@@ -5,6 +5,7 @@ from sklearn.utils.class_weight import compute_sample_weight
 
 from src.data_loader import person_level_group_kfold
 from src.evaluation.metrics import CLASSES, classification_scores, confusion
+from src.models.experiment_record import build_record, write_record
 from src.models.pipelines import ENCODED_MODELS, build_pipelines
 from src.utils.logger import (
     PROCESSED_DIR,
@@ -230,7 +231,13 @@ def _mean_std_table(fold_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def save_results(fold_df, oof_df):
+def _n_features_kept(summary_df, n_features_input):
+    if "n_features_mean" in summary_df.columns:
+        return float(summary_df["n_features_mean"].mean())
+    return int(n_features_input)
+
+
+def save_results(fold_df, oof_df, n_features_input=None):
     ensure_output_dirs()
     summary_df = _mean_std_table(fold_df)
     pooled_df = _pooled_scores(oof_df)
@@ -252,10 +259,42 @@ def save_results(fold_df, oof_df):
     logger.info("Saved %s", pooled_path)
     logger.info("Saved %s", cm_path)
     logger.info("Saved %s", oof_path)
+
+    if n_features_input is None:
+        if "n_features" in fold_df.columns:
+            n_features_input = int(fold_df["n_features"].max())
+        else:
+            n_features_input = 0
+    write_record(
+        build_record(
+            experiment=EXPERIMENT,
+            matrix=MATRIX_NAME,
+            n_splits=N_SPLITS,
+            n_features_input=n_features_input,
+            n_subjects=N_SUBJECTS,
+            split=BASELINE_TRAIN,
+            anova_f=ANOVA_F,
+            corr_filter=USE_CORR_FILTER,
+            corr_threshold=CORR_THRESHOLD,
+            corr_rank=CORR_RANK,
+            n_features_kept_mean=_n_features_kept(summary_df, n_features_input),
+            pooled_macro_f1={
+                row["model"]: float(row["macro_f1"])
+                for _, row in pooled_df.iterrows()
+            },
+            paths={
+                "fold_metrics": fold_path,
+                "summary": summary_path,
+                "pooled": pooled_path,
+                "confusion": cm_path,
+                "oof": oof_path,
+            },
+        )
+    )
     return summary_df, pooled_df
 
 
 if __name__ == "__main__":
     df = load_matrix()
     fold_df, oof_df = run_cv(df)
-    save_results(fold_df, oof_df)
+    save_results(fold_df, oof_df, n_features_input=len(_feature_cols(df)))

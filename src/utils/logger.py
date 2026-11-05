@@ -5,30 +5,26 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 OUTPUT_ROOT = PROJECT_ROOT / "outputs"
-LOG_DIR = OUTPUT_ROOT / "logs"
 PROCESSED_DIR = OUTPUT_ROOT / "processed_data"
 TABLE_DIR = OUTPUT_ROOT / "tables"
 FIGURE_DIR = OUTPUT_ROOT / "figures"
+EXPERIMENT_DIR = OUTPUT_ROOT / "experiments"
 
 
 def ensure_output_dirs():
-    for path in (LOG_DIR, PROCESSED_DIR, TABLE_DIR, FIGURE_DIR):
+    for path in (PROCESSED_DIR, TABLE_DIR, FIGURE_DIR, EXPERIMENT_DIR):
         path.mkdir(parents=True, exist_ok=True)
 
 
-def setup_logger(log_name="feature_extraction.log"):
-    ensure_output_dirs()
+def setup_logger():
     log = logging.getLogger("sand")
     log.setLevel(logging.INFO)
     if log.handlers:
         return log
 
     fmt = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
-    file_handler = logging.FileHandler(LOG_DIR / log_name, encoding="utf-8")
-    file_handler.setFormatter(fmt)
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(fmt)
-    log.addHandler(file_handler)
     log.addHandler(stream_handler)
     log.propagate = False
     return log

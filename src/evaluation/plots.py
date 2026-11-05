@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import to_rgb
 
 from src.data_loader import load_task_labels
 from src.evaluation.metrics import CLASSES
@@ -12,7 +13,21 @@ CLASS_TICKS = [
     "4\nNo dysarthria",
     "5\nHealthy",
 ]
+CLASS_LABELS = [
+    "1 Severe",
+    "2 Moderate",
+    "3 Mild",
+    "4 No dysarthria",
+    "5 Healthy",
+]
 BAR_COLOR = "#4C72B0"
+
+
+def _blue_gradient(n, base=BAR_COLOR):
+    rgb = np.array(to_rgb(base))
+    white = np.ones(3)
+    mix = np.linspace(0.35, 1.0, n)
+    return [tuple(white * (1.0 - a) + rgb * a) for a in mix]
 
 
 def _baseline_train_counts():
@@ -42,7 +57,7 @@ def plot_class_distribution():
         x,
         heights,
         width=0.62,
-        color=BAR_COLOR,
+        color=_blue_gradient(len(CLASSES)),
         edgecolor="white",
         linewidth=0.4,
     )
@@ -72,6 +87,39 @@ def plot_class_distribution():
     return counts
 
 
+def plot_class_distribution_pie():
+    counts = _baseline_train_counts()
+    sizes = [int(counts[c]) for c in CLASSES]
+    n = int(sum(sizes))
+    colors = _blue_gradient(len(CLASSES))
+
+    fig, ax = plt.subplots(figsize=(6.4, 4.2))
+    wedges, _, autotexts = ax.pie(
+        sizes,
+        colors=colors,
+        startangle=90,
+        counterclock=False,
+        autopct=lambda pct: f"{pct:.1f}%",
+        pctdistance=0.62,
+        wedgeprops={"edgecolor": "white", "linewidth": 0.8},
+        textprops={"fontsize": 9, "color": "#222222"},
+    )
+    for text in autotexts:
+        text.set_color("#222222")
+    ax.legend(
+        wedges,
+        CLASS_LABELS,
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(1.0, 0.5),
+    )
+    ax.set_aspect("equal")
+    logger.info("Baseline training class percentages (N = %s): %s", n, sizes)
+    fig.tight_layout()
+    _save_figure(fig, "class_distribution_pie")
+    return counts
+
+
 if __name__ == "__main__":
     plt.rcParams.update(
         {
@@ -84,3 +132,4 @@ if __name__ == "__main__":
         }
     )
     plot_class_distribution()
+    plot_class_distribution_pie()
