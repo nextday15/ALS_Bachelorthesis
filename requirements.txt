@@ -1,0 +1,16 @@
+# Numerical computation and data processing
+numpy
+pandas
+scipy
+
+# Machine learning
+scikit-learn
+xgboost
+mord
+
+# Acoustic feature extraction
+opensmile
+praat-parselmouth
+
+# Visualization
+matplotlib
