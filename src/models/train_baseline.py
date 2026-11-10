@@ -67,8 +67,9 @@ CORR_THRESHOLD = _CFG.get("corr_threshold")
 CORR_RANK = _CFG.get("corr_rank", "column_order")
 
 
-def load_matrix() -> pd.DataFrame:
-    path = PROCESSED_DIR / f"{MATRIX_NAME}.csv"
+def load_matrix(matrix_name: str | None = None) -> pd.DataFrame:
+    name = MATRIX_NAME if matrix_name is None else matrix_name
+    path = PROCESSED_DIR / f"{name}.csv"
     if not path.exists():
         raise FileNotFoundError(f"did not find {path}")
     df = pd.read_csv(path)
@@ -267,11 +268,9 @@ def save_results(fold_df, oof_df, n_features_input=None):
             n_splits=N_SPLITS,
             n_features_input=n_features_input,
             n_subjects=N_SUBJECTS,
-            split=BASELINE_TRAIN,
             anova_f=ANOVA_F,
-            corr_filter=USE_CORR_FILTER,
-            corr_threshold=CORR_THRESHOLD,
-            corr_rank=CORR_RANK,
+            corr_threshold=CORR_THRESHOLD if USE_CORR_FILTER else None,
+            corr_rank=CORR_RANK if USE_CORR_FILTER else None,
             n_features_kept_mean=_n_features_kept(summary_df, n_features_input),
             mean_macro_f1=_mean_macro_f1(summary_df),
             paths={
