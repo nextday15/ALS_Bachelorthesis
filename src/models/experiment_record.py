@@ -106,7 +106,7 @@ def build_hparam_record(**fields) -> dict:
     missing = [key for key in HPARAM_KEYS if key not in fields]
     if missing:
         raise ValueError(f"hparam record missing {missing}")
-    if "_hparam_" not in fields["experiment"]:
+    if not str(fields["experiment"]).startswith("hparam_"):
         raise ValueError("hparam record would overwrite a completed experiment")
     return {key: _json_ready(fields[key]) for key in HPARAM_KEYS}
 
@@ -114,7 +114,7 @@ def build_hparam_record(**fields) -> dict:
 def write_hparam_record(record: dict) -> Path:
     ensure_output_dirs()
     path = EXPERIMENT_DIR / f"{record['experiment']}.json"
-    if "_hparam_" not in path.stem:
+    if not path.stem.startswith("hparam_"):
         raise ValueError(f"refusing to overwrite {path}")
     path.write_text(
         json.dumps(record, indent=2, ensure_ascii=False) + "\n",

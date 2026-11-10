@@ -1,25 +1,23 @@
 PARAM_GRIDS = {
     "svm": {
-        "clf__C": [],
-        "clf__gamma": [],
+        "kernel": ["linear", "poly", "rbf", "sigmoid"],
+        "clf__C": [0.01, 0.1, 1.0, 10.0, 100.0],
+        "clf__gamma": [scale, 0.001, 0.01, 0.1],
     },
     "rf": {
-        "clf__n_estimators": [],
-        "clf__max_depth": [],
-        "clf__min_samples_leaf": [],
-        "clf__max_features": [],
+        "clf__n_estimators": [100, 200, 300, 400],
+        "clf__max_depth": [None, 5, 10],
+        "clf__min_samples_leaf": [1, 2, 5],
     },
     "xgb": {
-        "clf__n_estimators": [],
-        "clf__max_depth": [],
-        "clf__learning_rate": [],
-        "clf__subsample": [],
-        "clf__colsample_bytree": [],
-        "clf__min_child_weight": [],
-        "clf__reg_lambda": [],
+        "clf__n_estimators": [100, 200, 300, 400],
+        "clf__max_depth": [3,4,5,6],
+        "clf__learning_rate": [0.1, 0.08, 0.05, 0.03],
+        "clf__subsample": [0.5, 0.8, 1.0],
+        "clf__colsample_bytree": [0.5, 0.8, 1.0],
     },
     "ordinal": {
-        "clf__alpha": [],
+        "clf__alpha": [0.001, 0.01, 0.1, 1.0, 10, 100],
     },
 }
 

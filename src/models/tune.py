@@ -79,7 +79,7 @@ def run_search(model: str, n_jobs: int = 1):
     cfg = _experiment_config()
     grid = param_grid(model)
     n_candidates = len(ParameterGrid(grid))
-    experiment = f"{BASE_EXPERIMENT}_hparam_{model}"
+    experiment = f"hparam_{model}"
     log_path = LOG_DIR / f"{experiment}.log"
     _attach_log_file(log_path)
 
@@ -139,7 +139,7 @@ def run_search(model: str, n_jobs: int = 1):
     best_index = int(search.best_index_)
     results = search.cv_results_
     HPARAM_TABLE_DIR.mkdir(parents=True, exist_ok=True)
-    cv_path = HPARAM_TABLE_DIR / f"{experiment}_cv_results.csv"
+    cv_path = HPARAM_TABLE_DIR / f"{experiment}.csv"
     pd.DataFrame(results).to_csv(cv_path, index=False)
     logger.info("Saved %s", cv_path)
     logger.info("Best params: %s", search.best_params_)
