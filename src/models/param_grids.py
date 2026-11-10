@@ -1,8 +1,8 @@
 PARAM_GRIDS = {
     "svm": {
-        "kernel": ["linear", "poly", "rbf", "sigmoid"],
+        "clf__kernel": ["linear", "poly", "rbf", "sigmoid"],
         "clf__C": [0.01, 0.1, 1.0, 10.0, 100.0],
-        "clf__gamma": [scale, 0.001, 0.01, 0.1],
+        "clf__gamma": ["scale", 0.001, 0.01, 0.1],
     },
     "rf": {
         "clf__n_estimators": [100, 200, 300, 400],
