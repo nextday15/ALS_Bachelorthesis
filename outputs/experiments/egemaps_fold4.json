@@ -16,18 +16,17 @@
     "xgb",
     "ordinal"
   ],
-  "primary_metric": "macro_f1_pooled",
+  "primary_metric": "macro_f1_mean",
   "n_features_kept_mean": 704,
-  "pooled_macro_f1": {
-    "svm": 0.2971757214747869,
-    "rf": 0.2706770278901426,
-    "xgb": 0.3537067166327391,
-    "ordinal": 0.4308996681778114
+  "mean_macro_f1": {
+    "svm": 0.29030793608639227,
+    "rf": 0.2648034769210678,
+    "xgb": 0.3448827051320812,
+    "ordinal": 0.391729369617688
   },
   "paths": {
     "fold_metrics": "outputs/tables/1.2_fold4_baseline/egemaps_fold4_cv_fold_metrics.csv",
     "summary": "outputs/tables/1.2_fold4_baseline/egemaps_fold4_cv_summary.csv",
-    "pooled": "outputs/tables/1.2_fold4_baseline/egemaps_fold4_cv_pooled.csv",
     "confusion": "outputs/tables/1.2_fold4_baseline/egemaps_fold4_confusion.csv",
     "oof": "outputs/processed_data/egemaps_fold4_oof_predictions.csv"
   }

@@ -19,7 +19,7 @@ RECORD_KEYS = [
     "models",
     "primary_metric",
     "n_features_kept_mean",
-    "pooled_macro_f1",
+    "mean_macro_f1",
     "paths",
 ]
 
@@ -40,7 +40,7 @@ def build_record(
     n_features_input,
     n_subjects,
     split,
-    pooled_macro_f1,
+    mean_macro_f1,
     paths,
     anova_f=None,
     corr_filter=False,
@@ -48,7 +48,7 @@ def build_record(
     corr_rank=None,
     n_features_kept_mean=None,
     random_state=RANDOM_STATE,
-    primary_metric="macro_f1_pooled",
+    primary_metric="macro_f1_mean",
 ) -> dict:
     if n_features_kept_mean is None:
         n_features_kept_mean = n_features_input
@@ -64,10 +64,10 @@ def build_record(
         "n_subjects": int(n_subjects),
         "split": split,
         "random_state": random_state,
-        "models": list(pooled_macro_f1),
+        "models": list(mean_macro_f1),
         "primary_metric": primary_metric,
         "n_features_kept_mean": n_features_kept_mean,
-        "pooled_macro_f1": {k: float(v) for k, v in pooled_macro_f1.items()},
+        "mean_macro_f1": {k: float(v) for k, v in mean_macro_f1.items()},
         "paths": {k: relative_output_path(v) for k, v in paths.items()},
     }
     return {key: record[key] for key in RECORD_KEYS}

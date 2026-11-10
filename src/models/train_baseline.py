@@ -195,14 +195,6 @@ def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd
     return pd.DataFrame(fold_rows), pd.DataFrame(oof_rows)
 
 
-def _pooled_scores(oof_df: pd.DataFrame) -> pd.DataFrame:
-    rows = []
-    for name, sub in oof_df.groupby("model", sort=False):
-        scores = {"model": name, **classification_scores(sub["y_true"], sub["y_pred"])}
-        rows.append(scores)
-    return pd.DataFrame(rows)
-
-
 def _confusion_tables(oof_df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for name, sub in oof_df.groupby("model", sort=False):
@@ -237,26 +229,29 @@ def _n_features_kept(summary_df, n_features_input):
     return int(n_features_input)
 
 
+def _mean_macro_f1(summary_df: pd.DataFrame) -> dict:
+    return {
+        row["model"]: float(row["macro_f1_mean"])
+        for _, row in summary_df.iterrows()
+    }
+
+
 def save_results(fold_df, oof_df, n_features_input=None):
     ensure_output_dirs()
     summary_df = _mean_std_table(fold_df)
-    pooled_df = _pooled_scores(oof_df)
     cm_df = _confusion_tables(oof_df)
 
     fold_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_fold_metrics.csv"
     summary_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_summary.csv"
-    pooled_path = TABLE_DIR / f"{TABLE_PREFIX}_cv_pooled.csv"
     cm_path = TABLE_DIR / f"{TABLE_PREFIX}_confusion.csv"
     oof_path = PROCESSED_DIR / f"{OOF_NAME}.csv"
 
     fold_df.to_csv(fold_path, index=False)
     summary_df.to_csv(summary_path, index=False)
-    pooled_df.to_csv(pooled_path, index=False)
     cm_df.to_csv(cm_path, index=False)
     oof_df.to_csv(oof_path, index=False)
     logger.info("Saved %s", fold_path)
     logger.info("Saved %s", summary_path)
-    logger.info("Saved %s", pooled_path)
     logger.info("Saved %s", cm_path)
     logger.info("Saved %s", oof_path)
 
@@ -278,20 +273,16 @@ def save_results(fold_df, oof_df, n_features_input=None):
             corr_threshold=CORR_THRESHOLD,
             corr_rank=CORR_RANK,
             n_features_kept_mean=_n_features_kept(summary_df, n_features_input),
-            pooled_macro_f1={
-                row["model"]: float(row["macro_f1"])
-                for _, row in pooled_df.iterrows()
-            },
+            mean_macro_f1=_mean_macro_f1(summary_df),
             paths={
                 "fold_metrics": fold_path,
                 "summary": summary_path,
-                "pooled": pooled_path,
                 "confusion": cm_path,
                 "oof": oof_path,
             },
         )
     )
-    return summary_df, pooled_df
+    return summary_df
 
 
 if __name__ == "__main__":

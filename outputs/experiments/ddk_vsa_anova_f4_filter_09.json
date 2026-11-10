@@ -16,18 +16,17 @@
     "xgb",
     "ordinal"
   ],
-  "primary_metric": "macro_f1_pooled",
+  "primary_metric": "macro_f1_mean",
   "n_features_kept_mean": 106.6,
-  "pooled_macro_f1": {
-    "svm": 0.4044921464998026,
-    "rf": 0.3184949415476559,
-    "xgb": 0.3605870148139184,
-    "ordinal": 0.4045102184637068
+  "mean_macro_f1": {
+    "svm": 0.399288342875332,
+    "rf": 0.3154925871951909,
+    "xgb": 0.3553857764357159,
+    "ordinal": 0.38824590980875817
   },
   "paths": {
     "fold_metrics": "outputs/tables/3_Pearson/ddk_vsa_anova_f4_filter_09_cv_fold_metrics.csv",
     "summary": "outputs/tables/3_Pearson/ddk_vsa_anova_f4_filter_09_cv_summary.csv",
-    "pooled": "outputs/tables/3_Pearson/ddk_vsa_anova_f4_filter_09_cv_pooled.csv",
     "confusion": "outputs/tables/3_Pearson/ddk_vsa_anova_f4_filter_09_confusion.csv",
     "oof": "outputs/processed_data/ddk_vsa_anova_f4_filter_09_oof_predictions.csv"
   }
