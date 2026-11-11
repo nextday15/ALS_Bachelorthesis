@@ -3,15 +3,12 @@ data/
 results/
 !results/.gitkeep
 
-outputs/processed_data/
-outputs/models/
 
 # data files
 *.wav
 *.mp3
 *.zip
 *.xlsx
-*.parquet
 *.pkl
 *.joblib
 *.pth
