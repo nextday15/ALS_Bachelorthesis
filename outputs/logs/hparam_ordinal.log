@@ -1,0 +1,17 @@
+2026-11-12 10:50:03,036 | INFO | Hyperparameter search
+2026-11-12 10:50:03,036 | INFO | Experiment: hparam_ordinal
+2026-11-12 10:50:03,036 | INFO | Base experiment: ddk_vsa_anova_f4_filter_09
+2026-11-12 10:50:03,036 | INFO | Model: ordinal
+2026-11-12 10:50:03,036 | INFO | Subjects: 219
+2026-11-12 10:50:03,036 | INFO | Unfiltered features: 714
+2026-11-12 10:50:03,037 | INFO | n_splits: 5
+2026-11-12 10:50:03,037 | INFO | anova_f: 4.0
+2026-11-12 10:50:03,037 | INFO | corr_threshold: 0.9
+2026-11-12 10:50:03,037 | INFO | corr_rank: anova_f
+2026-11-12 10:50:03,037 | INFO | random_state: 42
+2026-11-12 10:50:03,037 | INFO | Candidates: 6
+2026-11-12 10:50:03,037 | INFO | GridSearch n_jobs: 4
+2026-11-12 10:50:05,829 | INFO | Saved /home/z/zhangyun/projects/ALS_Bachelorthesis/outputs/tables/hparam/hparam_ordinal.csv
+2026-11-12 10:50:05,829 | INFO | Best params: {'clf__alpha': 100}
+2026-11-12 10:50:05,829 | INFO | Best mean macro-F1: 0.4371108989050165
+2026-11-12 10:50:05,834 | INFO | Saved /home/z/zhangyun/projects/ALS_Bachelorthesis/outputs/experiments/hparam_ordinal.json
