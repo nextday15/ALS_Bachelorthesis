@@ -1,0 +1,17 @@
+2026-11-12 10:14:11,280 | INFO | Hyperparameter search
+2026-11-12 10:14:11,281 | INFO | Experiment: hparam_xgb
+2026-11-12 10:14:11,281 | INFO | Base experiment: ddk_vsa_anova_f4_filter_09
+2026-11-12 10:14:11,281 | INFO | Model: xgb
+2026-11-12 10:14:11,281 | INFO | Subjects: 219
+2026-11-12 10:14:11,281 | INFO | Unfiltered features: 714
+2026-11-12 10:14:11,281 | INFO | n_splits: 5
+2026-11-12 10:14:11,281 | INFO | anova_f: 4.0
+2026-11-12 10:14:11,281 | INFO | corr_threshold: 0.9
+2026-11-12 10:14:11,281 | INFO | corr_rank: anova_f
+2026-11-12 10:14:11,281 | INFO | random_state: 42
+2026-11-12 10:14:11,281 | INFO | Candidates: 576
+2026-11-12 10:14:11,281 | INFO | GridSearch n_jobs: 4
+2026-11-12 10:27:40,122 | INFO | Saved /home/z/zhangyun/projects/ALS_Bachelorthesis/outputs/tables/hparam/hparam_xgb.csv
+2026-11-12 10:27:40,123 | INFO | Best params: {'clf__colsample_bytree': 0.5, 'clf__learning_rate': 0.05, 'clf__max_depth': 6, 'clf__n_estimators': 100, 'clf__subsample': 1.0}
+2026-11-12 10:27:40,123 | INFO | Best mean macro-F1: 0.41720359606043295
+2026-11-12 10:27:40,128 | INFO | Saved /home/z/zhangyun/projects/ALS_Bachelorthesis/outputs/experiments/hparam_xgb.json

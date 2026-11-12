@@ -1,0 +1,42 @@
+{
+  "experiment": "hparam_svm",
+  "model": "svm",
+  "matrix": "fused_egemaps_ddk_vsa_train",
+  "n_splits": 5,
+  "n_subjects": 219,
+  "n_features_input": 714,
+  "anova_f": 4.0,
+  "corr_threshold": 0.9,
+  "corr_rank": "anova_f",
+  "random_state": 42,
+  "n_jobs": 4,
+  "param_grid": {
+    "clf__kernel": [
+      "linear",
+      "poly",
+      "rbf",
+      "sigmoid"
+    ],
+    "clf__C": [
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "clf__gamma": [
+      "scale",
+      0.001,
+      0.01,
+      0.1
+    ]
+  },
+  "best_params": {
+    "clf__C": 0.1,
+    "clf__gamma": "scale",
+    "clf__kernel": "linear"
+  },
+  "best_score_mean": 0.43576962138163466,
+  "best_score_std": 0.080651923008683,
+  "cv_results": "outputs/tables/hparam/hparam_svm.csv"
+}
