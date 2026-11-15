@@ -135,7 +135,11 @@ def _fit_predict(pipe, name, X_train, y_train, X_val):
     return y_pred, n_kept
 
 
-def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd.DataFrame]:
+def run_cv(
+    df: pd.DataFrame,
+    n_splits: int = N_SPLITS,
+    tuned: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     feat_cols = _feature_cols(df)
     logger.info("%s", CV_LOG)
     logger.info("Experiment: %s", EXPERIMENT)
@@ -146,6 +150,7 @@ def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd
     logger.info("corr_filter: %s", USE_CORR_FILTER)
     logger.info("corr_threshold: %s", CORR_THRESHOLD if USE_CORR_FILTER else None)
     logger.info("corr_rank: %s", CORR_RANK if USE_CORR_FILTER else None)
+    logger.info("tuned: %s", tuned)
     logger.info("Class counts: %s", df["Class"].value_counts().sort_index().to_dict())
 
     templates = build_pipelines(
@@ -153,6 +158,7 @@ def run_cv(df: pd.DataFrame, n_splits: int = N_SPLITS) -> tuple[pd.DataFrame, pd
         use_corr_filter=USE_CORR_FILTER,
         corr_threshold=CORR_THRESHOLD,
         corr_rank=CORR_RANK,
+        tuned=tuned,
     )
     fold_rows = []
     oof_rows = []

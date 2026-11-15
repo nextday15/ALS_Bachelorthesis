@@ -86,12 +86,73 @@ class EncodedLogisticAT(ClassifierMixin, BaseEstimator):
         return _decode_fixed(self.model_.predict(X))
 
 
+def _classifiers(random_state, tuned=False):
+    if not tuned:
+        return {
+            "svm": SVC(
+                kernel="rbf",
+                class_weight="balanced",
+                random_state=random_state,
+            ),
+            "rf": RandomForestClassifier(
+                n_estimators=300,
+                class_weight="balanced",
+                random_state=random_state,
+                n_jobs=-1,
+            ),
+            "xgb": XGBClassifier(
+                n_estimators=200,
+                max_depth=4,
+                learning_rate=0.1,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                objective="multi:softprob",
+                eval_metric="mlogloss",
+                n_jobs=1,
+                random_state=random_state,
+                verbosity=0,
+            ),
+            "ordinal": LogisticAT(alpha=1.0),
+        }
+    return {
+        "svm": SVC(
+            kernel="linear",
+            C=0.1,
+            gamma="scale",
+            class_weight="balanced",
+            random_state=random_state,
+        ),
+        "rf": RandomForestClassifier(
+            n_estimators=300,
+            max_depth=10,
+            min_samples_leaf=5,
+            class_weight="balanced",
+            random_state=random_state,
+            n_jobs=-1,
+        ),
+        "xgb": XGBClassifier(
+            n_estimators=100,
+            max_depth=6,
+            learning_rate=0.05,
+            subsample=1.0,
+            colsample_bytree=0.5,
+            objective="multi:softprob",
+            eval_metric="mlogloss",
+            n_jobs=1,
+            random_state=random_state,
+            verbosity=0,
+        ),
+        "ordinal": LogisticAT(alpha=100),
+    }
+
+
 def build_pipelines(
     random_state=RANDOM_STATE,
     anova_f=None,
     use_corr_filter=False,
     corr_threshold=CORR_THRESHOLD,
     corr_rank="column_order",
+    tuned=False,
 ):
     pre_kwargs = dict(
         anova_f=anova_f,
@@ -99,57 +160,10 @@ def build_pipelines(
         corr_threshold=corr_threshold,
         corr_rank=corr_rank,
     )
+    classifiers = _classifiers(random_state, tuned=tuned)
     return {
-        "svm": Pipeline(
-            _preprocess(**pre_kwargs)
-            + [
-                (
-                    "clf",
-                    SVC(
-                        kernel="rbf",
-                        class_weight="balanced",
-                        random_state=random_state,
-                    ),
-                )
-            ]
-        ),
-        "rf": Pipeline(
-            _preprocess(**pre_kwargs)
-            + [
-                (
-                    "clf",
-                    RandomForestClassifier(
-                        n_estimators=300,
-                        class_weight="balanced",
-                        random_state=random_state,
-                        n_jobs=-1,
-                    ),
-                )
-            ]
-        ),
-        "xgb": Pipeline(
-            _preprocess(**pre_kwargs)
-            + [
-                (
-                    "clf",
-                    XGBClassifier(
-                        n_estimators=200,
-                        max_depth=4,
-                        learning_rate=0.1,
-                        subsample=0.8,
-                        colsample_bytree=0.8,
-                        objective="multi:softprob",
-                        eval_metric="mlogloss",
-                        n_jobs=1,
-                        random_state=random_state,
-                        verbosity=0,
-                    ),
-                )
-            ]
-        ),
-        "ordinal": Pipeline(
-            _preprocess(**pre_kwargs) + [("clf", LogisticAT(alpha=1.0))]
-        ),
+        name: Pipeline(_preprocess(**pre_kwargs) + [("clf", clf)])
+        for name, clf in classifiers.items()
     }
 
 
