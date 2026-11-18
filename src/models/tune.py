@@ -30,7 +30,8 @@ EXPECTED = {
     "corr_rank": "anova_f",
     "n_features_input": 714,
 }
-HPARAM_TABLE_DIR = TABLE_DIR / "hparam"
+HPARAM_TABLE_DIR = TABLE_DIR / "4_hparam"
+HPARAM_JSON_DIR = OUTPUT_ROOT / "experiments_JSON"
 LOG_DIR = OUTPUT_ROOT / "logs"
 
 
@@ -79,7 +80,7 @@ def run_search(model: str, n_jobs: int = 1):
     cfg = _experiment_config()
     grid = param_grid(model)
     n_candidates = len(ParameterGrid(grid))
-    experiment = f"hparam_{model}"
+    experiment = f"hparam_{model}_2"
     log_path = LOG_DIR / f"{experiment}.log"
     _attach_log_file(log_path)
 
@@ -163,7 +164,7 @@ def run_search(model: str, n_jobs: int = 1):
         best_score_std=_finite_or_none(results["std_test_score"][best_index]),
         cv_results=cv_path,
     )
-    write_hparam_record(record)
+    write_hparam_record(record, directory=HPARAM_JSON_DIR)
     return record
 
 

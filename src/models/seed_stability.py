@@ -1,7 +1,9 @@
-"""Locked hyperparameters on five person-level CV partitions.
+"""Five person-level CV partitions for the locked models.
 
-The seed is passed only to StratifiedGroupKFold(shuffle=True). Classifier
-random_state stays at 42. ANOVA and Pearson stay inside each training fold.
+SVM keeps the locked linear kernel and uses C=0.01. RF, XGBoost, and
+ordinal logistic regression keep their locked hyperparameters, including
+ordinal alpha=100. The seed is passed only to StratifiedGroupKFold(shuffle=True).
+Classifier random_state stays at 42. ANOVA and Pearson stay inside each training fold.
 """
 
 import numpy as np
@@ -9,7 +11,7 @@ import pandas as pd
 from sklearn.base import clone
 from sklearn.model_selection import StratifiedGroupKFold
 
-from src.evaluation.metrics import classification_scores
+from src.evaluation.metrics import CLASSES, classification_scores
 from src.models.pipelines import RANDOM_STATE, build_pipelines
 from src.models.train_baseline import (
     ANOVA_F,
@@ -31,6 +33,9 @@ SCORE_PATH = OUT_DIR / "hparam_seed_macro_f1.csv"
 SUMMARY_PATH = OUT_DIR / "hparam_seed_summary.csv"
 
 MODELS = ("svm", "rf", "xgb", "ordinal")
+METRIC_COLS = ["n_features", "macro_f1", "accuracy", "macro_recall", "mae"]
+for _class in CLASSES:
+    METRIC_COLS.extend([f"recall_{_class}", f"f1_{_class}"])
 
 
 def _iter_folds(df: pd.DataFrame, seed: int):
@@ -59,7 +64,13 @@ def _templates():
         corr_rank=CORR_RANK,
         tuned=True,
     )
-    return [(name, clone(base[name])) for name in MODELS]
+    templates = []
+    for name in MODELS:
+        pipe = clone(base[name])
+        if name == "svm":
+            pipe.set_params(clf__C=0.01)
+        templates.append((name, pipe))
+    return templates
 
 
 def _check_templates(templates):
@@ -68,10 +79,12 @@ def _check_templates(templates):
     ordinal = by_name["ordinal"].get_params()
     rf = by_name["rf"].get_params()
     xgb = by_name["xgb"].get_params()
-    if svm["clf__kernel"] != "linear" or svm["clf__C"] != 0.1:
-        raise RuntimeError("locked SVM is not linear C=0.1")
+    if svm["clf__kernel"] != "linear" or svm["clf__C"] != 0.01:
+        raise RuntimeError("SVM seed test is not linear C=0.01")
+    if svm["clf__gamma"] != "scale" or svm["clf__random_state"] != RANDOM_STATE:
+        raise RuntimeError("SVM seed test changed gamma or the classifier seed")
     if ordinal["clf__alpha"] != 100:
-        raise RuntimeError("locked ordinal alpha is not 100")
+        raise RuntimeError("ordinal alpha is not the locked value 100")
     if rf["clf__max_depth"] != 10 or rf["clf__random_state"] != RANDOM_STATE:
         raise RuntimeError("RF is not the locked depth-10 model at seed 42")
     if xgb["clf__max_depth"] != 6 or xgb["clf__learning_rate"] != 0.05:
@@ -107,36 +120,43 @@ def run_seed_stability(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     for seed in SEEDS:
         folds = list(_iter_folds(df, seed))
         for name, template in templates:
-            fold_scores = []
+            fold_rows = []
             for _, train_df, val_df in folds:
                 X_train, y_train = _xy(train_df, feat_cols)
                 X_val, y_val = _xy(val_df, feat_cols)
                 y_pred, n_kept = _fit_predict(
                     clone(template), name, X_train, y_train, X_val
                 )
-                fold_scores.append(classification_scores(y_val, y_pred)["macro_f1"])
-                logger.info(
-                    "  %s seed=%s fold features kept=%s",
-                    name,
-                    seed,
-                    n_kept,
+                fold_rows.append(
+                    {
+                        "n_features": n_kept,
+                        **classification_scores(y_val, y_pred),
+                    }
                 )
-            macro_f1 = float(np.mean(fold_scores))
-            rows.append({"model": name, "seed": seed, "macro_f1": macro_f1})
-            logger.info("%s seed=%s macro_f1=%.3f", name, seed, macro_f1)
+            seed_row = {"model": name, "seed": seed}
+            for col in METRIC_COLS:
+                seed_row[col] = float(np.mean([row[col] for row in fold_rows]))
+            rows.append(seed_row)
+            logger.info(
+                "%s seed=%s macro_f1=%.3f acc=%.3f recall=%.3f mae=%.3f",
+                name,
+                seed,
+                seed_row["macro_f1"],
+                seed_row["accuracy"],
+                seed_row["macro_recall"],
+                seed_row["mae"],
+            )
 
     score_df = pd.DataFrame(rows)
     summary_rows = []
     for name in MODELS:
-        values = score_df.loc[score_df["model"] == name, "macro_f1"]
-        summary_rows.append(
-            {
-                "model": name,
-                "macro_f1_mean": float(values.mean()),
-                "macro_f1_std": float(values.std(ddof=1)),
-            }
-        )
-    return score_df, pd.DataFrame(summary_rows)
+        sub = score_df.loc[score_df["model"] == name]
+        summary = {"model": name}
+        for col in METRIC_COLS:
+            summary[f"{col}_mean"] = float(sub[col].mean())
+            summary[f"{col}_std"] = float(sub[col].std(ddof=1))
+        summary_rows.append(summary)
+    return score_df[["model", "seed", "macro_f1"]], pd.DataFrame(summary_rows)
 
 
 def save_seed_stability(score_df: pd.DataFrame, summary_df: pd.DataFrame):
@@ -154,8 +174,10 @@ if __name__ == "__main__":
     save_seed_stability(scores, summary)
     for row in summary.itertuples(index=False):
         logger.info(
-            "%s  mean=%.3f  std=%.3f",
+            "%s  macro_f1=%.3f  acc=%.3f  recall=%.3f  mae=%.3f",
             row.model,
             row.macro_f1_mean,
-            row.macro_f1_std,
+            row.accuracy_mean,
+            row.macro_recall_mean,
+            row.mae_mean,
         )

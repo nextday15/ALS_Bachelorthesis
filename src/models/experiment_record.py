@@ -111,9 +111,11 @@ def build_hparam_record(**fields) -> dict:
     return {key: _json_ready(fields[key]) for key in HPARAM_KEYS}
 
 
-def write_hparam_record(record: dict) -> Path:
+def write_hparam_record(record: dict, directory: Path | None = None) -> Path:
     ensure_output_dirs()
-    path = EXPERIMENT_DIR / f"{record['experiment']}.json"
+    out_dir = EXPERIMENT_DIR if directory is None else Path(directory)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{record['experiment']}.json"
     if not path.stem.startswith("hparam_"):
         raise ValueError(f"refusing to overwrite {path}")
     path.write_text(
