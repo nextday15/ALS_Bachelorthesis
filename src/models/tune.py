@@ -80,7 +80,7 @@ def run_search(model: str, n_jobs: int = 1):
     cfg = _experiment_config()
     grid = param_grid(model)
     n_candidates = len(ParameterGrid(grid))
-    experiment = f"hparam_{model}_2"
+    experiment = f"hparam_{model}_3"
     log_path = LOG_DIR / f"{experiment}.log"
     _attach_log_file(log_path)
 
