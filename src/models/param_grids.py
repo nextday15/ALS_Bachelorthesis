@@ -5,7 +5,7 @@ PARAM_GRIDS = {
         "clf__gamma": ["scale", 0.001, 0.01, 0.1],
     },
     "rf": {
-        "clf__n_estimators": [100, 200, 300, 400, 500],
+        "clf__n_estimators": [300, 400, 500, 600, 700, 800],
         "clf__max_depth": [None, 5, 10, 15, 20],
         "clf__min_samples_leaf": [1, 2, 5, 7, 10],
     },
