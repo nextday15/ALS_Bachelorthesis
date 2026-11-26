@@ -16,6 +16,15 @@ SCORE_PATH = TABLE_DIR / "4_hparam" / "hparam_seed_macro_f1.csv"
 
 
 def plot_seed_stability(score_df: pd.DataFrame | None = None):
+    plt.rcParams.update(
+        {
+            "font.size": 10,
+            "axes.labelsize": 11,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "savefig.dpi": 300,
+        }
+    )
     if score_df is None:
         score_df = pd.read_csv(SCORE_PATH)
     missing = [name for name in MODELS if name not in set(score_df["model"])]
@@ -23,19 +32,27 @@ def plot_seed_stability(score_df: pd.DataFrame | None = None):
         raise ValueError(f"seed scores missing models: {missing}")
 
     fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    rng = np.random.default_rng(0)
-    for i, name in enumerate(MODELS):
-        y = score_df.loc[score_df["model"] == name, "macro_f1"].to_numpy(dtype=float)
-        x = i + rng.uniform(-0.08, 0.08, size=len(y))
-        ax.scatter(
-            x,
-            y,
-            s=42,
-            color=BAR_COLOR,
-            edgecolor="white",
-            linewidth=0.6,
-            zorder=3,
-        )
+    values = [
+        score_df.loc[score_df["model"] == name, "macro_f1"].to_numpy(dtype=float)
+        for name in MODELS
+    ]
+    boxes = ax.boxplot(
+        values,
+        positions=np.arange(len(MODELS)),
+        widths=0.55,
+        patch_artist=True,
+        medianprops={"color": "white", "linewidth": 1.6},
+        whiskerprops={"color": BAR_COLOR, "linewidth": 1.2},
+        capprops={"color": BAR_COLOR, "linewidth": 1.2},
+        flierprops={
+            "marker": "o",
+            "markerfacecolor": BAR_COLOR,
+            "markeredgecolor": "white",
+            "markersize": 5,
+        },
+        boxprops={"facecolor": BAR_COLOR, "edgecolor": BAR_COLOR, "linewidth": 1.0},
+    )
+    del boxes
 
     ax.set_xticks(np.arange(len(MODELS)))
     ax.set_xticklabels([MODEL_LABELS[name] for name in MODELS])
