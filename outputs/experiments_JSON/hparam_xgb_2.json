@@ -1,0 +1,58 @@
+{
+  "experiment": "hparam_xgb_2",
+  "model": "xgb",
+  "matrix": "fused_egemaps_ddk_vsa_train",
+  "n_splits": 5,
+  "n_subjects": 219,
+  "n_features_input": 714,
+  "anova_f": 4.0,
+  "corr_threshold": 0.9,
+  "corr_rank": "anova_f",
+  "random_state": 42,
+  "n_jobs": 4,
+  "param_grid": {
+    "clf__n_estimators": [
+      50,
+      100,
+      200,
+      300,
+      400
+    ],
+    "clf__max_depth": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "clf__learning_rate": [
+      0.1,
+      0.08,
+      0.05,
+      0.03
+    ],
+    "clf__subsample": [
+      0.5,
+      0.8,
+      1.0
+    ],
+    "clf__colsample_bytree": [
+      0.3,
+      0.4,
+      0.5,
+      0.8,
+      1.0
+    ]
+  },
+  "best_params": {
+    "clf__colsample_bytree": 0.5,
+    "clf__learning_rate": 0.05,
+    "clf__max_depth": 8,
+    "clf__n_estimators": 100,
+    "clf__subsample": 1.0
+  },
+  "best_score_mean": 0.43071265017871374,
+  "best_score_std": 0.10759545205436533,
+  "cv_results": "outputs/tables/4_hparam/hparam_xgb_2.csv"
+}
